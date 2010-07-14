@@ -34,24 +34,27 @@ trackBranch("pkrumins", "stackvm", "master",
 trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
     function(x) { bot.privmsg('#stackvm', x) })
 
-
-function trackBranch(username, repo, branch, shout) {
+//TODO: Make this take a single data structure?
+//TODO: Get to return a single "stream" for emitting
+function trackBranch(username, repo, branch, callback) {
     gh.getCommitApi().getBranchCommits(username, repo, branch, checker )
 
     function checker(err, commits) {
+        shout=""
         var oldCommitId = commits[0].id //Set to 1 for testing (should be 0)
+
         setInterval(function() {
           gh.getCommitApi().getBranchCommits(username, repo, branch, 
           function(err, commits) {
             var i = 0
             while ( i < commits.length && commits[i].id !== oldCommitId ) {
-                if (i==0) {shout("Whoa nelly! New commits to "+username+"/"+repo+" ("+branch+")!")}
-                shout("    * "+commits[i].author.name+": "+commits[i].message)
+                if (i==0) {shout+="Whoa nelly! New commits to "+username+"/"+repo+" ("+branch+")!\n"}
+                shout+="    * "+commits[i].author.name+": "+commits[i].message+"\n"
                 i++ }
             if (commits[0].id !== oldCommitId) { 
-                shout("githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch) 
-                shout(" ")}
+                shout+="githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch+"\n"}
             oldCommitId = commits[0].id})
+            callback(shout)
         }, 15000)
     }
 }
