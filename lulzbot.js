@@ -43,14 +43,14 @@ trackBranch("pkrumins", "stackvm", "master",
 trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
     function(shout) {eventer.emit("git", shout)})
 trackBranch("jesusabdullah", "lulzbot", "master",
-    function(x) { bot.privmsg('#stackvm', x) }
+    function(x) { bot.privmsg('#stackvm', x) })
 
 
 function trackBranch(username, repo, branch, callback) {
     gh.getCommitApi().getBranchCommits(username, repo, branch, checker )
 
     function checker(err, commits) {
-        var oldCommitId = commits[1].id //Set to 1 for testing (should be 0)
+        var oldCommitId = commits[0].id //Set to 1 for testing (should be 0)
 
         setInterval(function() {
           gh.getCommitApi().getBranchCommits(username, repo, branch, 
