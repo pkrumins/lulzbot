@@ -42,8 +42,8 @@ trackBranch("pkrumins", "stackvm", "master",
 
 trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
     function(shout) {eventer.emit("git", shout)})
-/*trackBranch("jesusabdullah", "anisotropy", "master",
-    function(x) { bot.privmsg('#stackvm', x) } */
+trackBranch("jesusabdullah", "lulzbot", "master",
+    function(x) { bot.privmsg('#stackvm', x) }
 
 
 function trackBranch(username, repo, branch, callback) {
