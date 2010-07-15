@@ -18,3 +18,4 @@ I considered using Jerk as well, but my needs extended past merely being able to
 * Figure out why bot eventually "times out" when left alone and fix.
 * Allow more nuanced control of github watchings
 * Spruce up lulzbot's output, make more amusing
+* Cut off commit listings at some arbitrary number to avoid floods
