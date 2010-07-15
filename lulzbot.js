@@ -1,60 +1,68 @@
-//TODO: Like, Actually Install these things so they don't depend on abs. paths?
-
+//TODO: Install libs s.t. abs. paths are unnecessary
+//TODO: Test (require().s)() idea
+//TODO: Config file
+//TODO: Reload command/REPL action
+//TODO: Wrap bot up in something like a separate-able library a la Jerk?
+//TODO: Figure out why bot eventually "times out" and fix
+//TODO: Change trackBranch s.t. a single call with a heirarchical structure
+//passed in as input
 var sys = require('sys')
 var GitHubApi = require('./lib/github').GitHubApi
-//May want to use Jerk later. :/
-var IRC = require('./lib/irc')
-
 var gh = new GitHubApi(true)
+//var gh = new (require('./lib/github').GitHubApi)(true) //mebbs?
+var IRC = require('./lib/irc')
+var EE = require('events').EventEmitter
+
+
 var options = { server: 'irc.freenode.net',
                 nick: 'lulzbot',
                 channels: ['#stackvm']}
 
 var bot = new IRC(options)
+//may "steal" some code from jerk for doing this more slickly
+bot.connect(function() {bot.join(options.channels)})
 
-bot.connect(function() {bot.join('#stackvm')})
+eventer = new EE()
+//Listeners
+eventer.addListener("git", function(x) { bot.privmsg('#stackvm', x) })
 
-//todo: Make something similar to Jerk but which utilizes event emitters
-//instead of, umm, what it does now.
 
-/*trackBranch("jesusabdullah", "anisotropy", "master",
-    function(x) { bot.privmsg('#stackvm', x) } */
+//tracked git branches
 trackBranch("substack", "dnode", "master",
-    function(x) { bot.privmsg('#stackvm', x) })
+    function(shout) {eventer.emit("git", shout)} )
 trackBranch("substack", "js-traverse", "master", 
-    function(x) { bot.privmsg('#stackvm', x) })
+    function(shout) {eventer.emit("git", shout)})
 trackBranch("substack", "stackvm", "master", 
-    function(x) { bot.privmsg('#stackvm', x) })
+    function(shout) {eventer.emit("git", shout)})
 
 trackBranch("pkrumins", "node-jsmin", "master",
-    function(x) { bot.privmsg('#stackvm', x) })
+    function(shout) {eventer.emit("git", shout)})
 trackBranch("pkrumins", "stackvm", "master",
-    function(x) { bot.privmsg('#stackvm', x) })
+    function(shout) {eventer.emit("git", shout)})
 
 trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
-    function(x) { bot.privmsg('#stackvm', x) })
+    function(shout) {eventer.emit("git", shout)})
+/*trackBranch("jesusabdullah", "anisotropy", "master",
+    function(x) { bot.privmsg('#stackvm', x) } */
 
-//TODO: Make this take a single data structure?
-//TODO: Get to return a single "stream" for emitting
+
 function trackBranch(username, repo, branch, callback) {
     gh.getCommitApi().getBranchCommits(username, repo, branch, checker )
 
     function checker(err, commits) {
-        shout=""
-        var oldCommitId = commits[0].id //Set to 1 for testing (should be 0)
+        var oldCommitId = commits[1].id //Set to 1 for testing (should be 0)
 
         setInterval(function() {
           gh.getCommitApi().getBranchCommits(username, repo, branch, 
           function(err, commits) {
             var i = 0
             while ( i < commits.length && commits[i].id !== oldCommitId ) {
-                if (i==0) {shout+="Whoa nelly! New commits to "+username+"/"+repo+" ("+branch+")!\n"}
-                shout+="    * "+commits[i].author.name+": "+commits[i].message+"\n"
+                if (i==0) {callback("Whoa nelly! New commits to "+username+"/"+repo+" ("+branch+")!")}
+                callback("    * "+commits[i].author.name+": "+commits[i].message)
                 i++ }
             if (commits[0].id !== oldCommitId) { 
-                shout+="githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch+"\n"}
+                callback("githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch)}
             oldCommitId = commits[0].id})
-            callback(shout)
-        }, 15000)
+        }, 30000)
     }
 }
