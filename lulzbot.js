@@ -51,13 +51,17 @@ function trackBranch(username, repo, branch, callback) {
 
     function checker(err, commits) {
         var oldCommitId = commits[0].id //Set to 1 for testing (should be 0)
-
+        var greetz = ["Whoa Nelly!",
+                      "Zounds!",
+                      "Egads!",
+                      "Oh snap!",
+                      "Aack!"]
         setInterval(function() {
           gh.getCommitApi().getBranchCommits(username, repo, branch, 
           function(err, commits) {
             var i = 0
             while ( i < commits.length && commits[i].id !== oldCommitId ) {
-                if (i==0) {callback("Whoa nelly! New commits to "+username+"/"+repo+" ("+branch+")!")}
+                if (i==0) {callback(greetz[Math.floor(Math.random(length(greetz)))]+"New commits to "+username+"/"+repo+" ("+branch+")!")}
                 callback("    * "+commits[i].author.name+": "+commits[i].message)
                 i++ }
             if (commits[0].id !== oldCommitId) { 
