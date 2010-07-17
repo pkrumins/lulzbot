@@ -1,0 +1,25 @@
+---# Github watched repos/branches
+substack:
+    stackvm:
+        master:
+            - "#stackvm"
+    dnode:
+        master:
+            - "#stackvm"
+    js-traverse:
+        master:
+            - "#stackvm"
+pkrumins:
+    stackvm:
+        master:
+            - "#stackvm"
+    node-jsmin:
+        master:
+            - "#stackvm"
+jesusabdullah:
+    lulzbot:
+        master:
+            - "#stackvm"
+    jesusabdullah.github.com:
+        master:
+            - "#stackvm"
