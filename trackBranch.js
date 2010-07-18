@@ -15,7 +15,7 @@ exports.trackBranch = function trackBranch(username, repo, branch, callback) {
           function(err, commits) {
             var i = 0;
             while ( i < commits.length && commits[i].id !== oldCommitId ) {
-                if (i==0) {callback(greetz[Math.floor(Math.random(length(greetz)))]+"New commits to "+username+"/"+repo+" ("+branch+")!");}
+                if (i==0) {callback(greetz[Math.floor(Math.random(greetz.length))]+"New commits to "+username+"/"+repo+" ("+branch+")!");}
                 callback("    * "+commits[i].author.name+": "+commits[i].message);
                 i++; }
             if (commits[0].id !== oldCommitId) { 
