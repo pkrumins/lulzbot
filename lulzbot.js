@@ -7,7 +7,7 @@
 //TODO: Change trackBranch s.t. a single call with a heirarchical structure
 //passed in as input
 var sys = require('sys');
-var gh = new (require('./lib/github').GitHubApi)(true); //mebbs?
+var gh = new (require('./lib/github').GitHubApi)(true);
 var IRC = require('./lib/irc');
 var EE = require('events').EventEmitter;
 
@@ -17,8 +17,7 @@ var options = { server: 'irc.freenode.net',
                 channels: ['#stackvm']};
 
 var bot = new IRC(options);
-//may "steal" some code from jerk for doing this more slickly
-bot.connect(function() {setTimeout(bot.join(options.channels), 15000)});
+bot.connect(function() {bot.join(options.channels)});
 
 eventer = new EE();
 //Listeners
