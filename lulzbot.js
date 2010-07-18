@@ -7,23 +7,22 @@
 //TODO: Change trackBranch s.t. a single call with a heirarchical structure
 //passed in as input
 var sys = require('sys');
-var gh = new (require('./lib/github').GitHubApi)(true); //mebbs?
+var trackBranch = require('./trackBranch').trackBranch;
 var IRC = require('./lib/irc');
 var EE = require('events').EventEmitter;
-
+var getWeather = require('./weather').getWeather;
 
 var options = { server: 'irc.freenode.net',
                 nick: 'lulzbot',
                 channels: ['#stackvm']};
 
 var bot = new IRC(options);
-//may "steal" some code from jerk for doing this more slickly
 bot.connect(function() {setTimeout(bot.join(options.channels), 15000)});
 
 eventer = new EE();
-//Listeners
+//Outside listeners
 eventer.addListener("git", function(x) { bot.privmsg('#stackvm', x) });
-
+eventer.addListener("weather", function(x) { bot.privmsg('#stackvm', x) });
 
 //tracked git branches
 trackBranch("substack", "dnode", "master",
@@ -43,28 +42,13 @@ trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
 trackBranch("jesusabdullah", "lulzbot", "master",
     function(shout) {eventer.emit("git", shout)});
 
-
-function trackBranch(username, repo, branch, callback) {
-    gh.getCommitApi().getBranchCommits(username, repo, branch, checker );
-
-    function checker(err, commits) {
-        var oldCommitId = commits[0].id; //Set to 1 for testing (should be 0)
-        var greetz = ["Whoa Nelly!",
-                      "Zounds!",
-                      "Egads!",
-                      "Oh snap!",
-                      "Aack!"];
-        setInterval(function() {
-          gh.getCommitApi().getBranchCommits(username, repo, branch, 
-          function(err, commits) {
-            var i = 0;
-            while ( i < commits.length && commits[i].id !== oldCommitId ) {
-                if (i==0) {callback(greetz[Math.floor(Math.random(length(greetz)))]+"New commits to "+username+"/"+repo+" ("+branch+")!");}
-                callback("    * "+commits[i].author.name+": "+commits[i].message);
-                i++; }
-            if (commits[0].id !== oldCommitId) { 
-                callback("githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch);}
-            oldCommitId = commits[0].id});
-        }, 30000);
+//bot listener
+bot.addListener('privmsg', function(msg) {
+    //Jerk has this.
+    var text = msg.params.slice(-1).toString();
+    //weather action
+    wx=text.match("^!w(x|eather) (.+)");
+    if (wx !== null) {
+        getWeather(wx[2],function(shout) {eventer.emit("weather", shout);});
     }
-}
+});
