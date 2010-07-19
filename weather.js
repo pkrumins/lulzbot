@@ -29,7 +29,7 @@ exports.getWeather = function getWeather (location, callback) {
 
             //Some locations have a blank region, so we use the country instead.
             //Currently untested.
-            if (location.region==null) {
+            if (location.region=="") {
                 callback(location.city+", "+location.country+":");
             } else {
                 callback(location.city+", "+location.region+":");
