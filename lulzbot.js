@@ -23,6 +23,7 @@ eventer = new EE();
 //Outside listeners
 eventer.addListener("git", function(x) { bot.privmsg('#stackvm', x) });
 eventer.addListener("weather", function(x) { bot.privmsg('#stackvm', x) });
+eventer.addListener("showsource", function() {bot.privmsg('#stackvm','http://github.com/jesusabdullah/lulzbot/blob/master/lulzbot.js'); });
 
 //tracked git branches
 trackBranch("substack", "dnode", "master",
@@ -45,10 +46,13 @@ trackBranch("jesusabdullah", "lulzbot", "master",
 //bot listener
 bot.addListener('privmsg', function(msg) {
     //Jerk has this.
+    //IRC-js chokes on parsing messages if there's a backtick in a nick
     var text = msg.params.slice(-1).toString();
     //weather action
-    wx=text.match("^!w(x|eather) (.+)");
-    if (wx !== null) {
+    if (text.match("^!w(x|eather) (.+)") !== null) {
+        sys.puts(wx[2])
         getWeather(wx[2],function(shout) {eventer.emit("weather", shout);});
     }
+    //source action
+    if (text.match("^!source") !== null) {eventer.emit("showsource");}
 });
