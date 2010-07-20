@@ -13,11 +13,23 @@ exports.trackBranch = function trackBranch(username, repo, branch, callback) {
         setInterval(function() {
           gh.getCommitApi().getBranchCommits(username, repo, branch, 
           function(err, commits) {
+            var maxcommitlist = 5;
             var i = 0;
+            var commitlist = [];
             while ( i < commits.length && commits[i].id !== oldCommitId ) {
                 if (i==0) {callback(greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+username+"/"+repo+" ("+branch+")!");}
-                callback("    * "+commits[i].author.name+": "+commits[i].message);
-                i++; }
+                commitlist=("    * "+commits[i].author.name+": "+commits[i].message)+commitlist;
+                i++; 
+            }
+            if (commitlist.length > maxcommitlist) {
+                commitlist = commitlist.slice(0,Math.floor(maxcommitlist/2))
+                            +["..."]
+                            +commitlist.slice(commitlist.length-Math.floor(maxcommitlist/2),commitlist.length)
+                            +["(And more! This list was truncated for brevity's sake.)"];
+            }
+            for (i in commitlist) {
+                callback(commitlist[i]);
+            }
             if (commits[0].id !== oldCommitId) { 
                 callback("githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch);}
             oldCommitId = commits[0].id});
