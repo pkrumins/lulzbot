@@ -22,10 +22,10 @@ exports.trackBranch = function trackBranch(username, repo, branch, callback) {
                 i++; 
             }
             if (commitlist.length > maxcommitlist) {
-                commitlist = commitlist.slice(0,Math.floor(maxcommitlist/2))
-                            +["..."]
-                            +commitlist.slice(commitlist.length-Math.floor(maxcommitlist/2),commitlist.length)
-                            +["(And more! This list was truncated for brevity's sake.)"];
+                commitlist.push(commitlist.slice(0,Math.floor(maxcommitlist/2)));
+                commitlist.push("...");
+                commitlist.push(commitlist.slice(commitlist.length-Math.floor(maxcommitlist/2),commitlist.length);
+                commitlist.push("(And more! This list was truncated for brevity's sake.)");
             }
             for (i in commitlist) {
                 callback(commitlist[i]);
