@@ -49,7 +49,8 @@ bot.addListener('privmsg', function(msg) {
     //IRC-js chokes on parsing messages if there's a backtick in a nick
     var text = msg.params.slice(-1).toString();
     //weather action
-    if (text.match("^!w(x|eather) (.+)") !== null) {
+    wx = text.match("^!w(x|eather) (.+)");
+    if (wx !== null) {
         sys.puts(wx[2])
         getWeather(wx[2],function(shout) {eventer.emit("weather", shout);});
     }
