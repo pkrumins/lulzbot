@@ -8,7 +8,7 @@
 //passed in as input
 var sys = require('sys');
 var trackBranch = require('./trackBranch').trackBranch;
-var jerk = require('./lib/jerk');
+var jerk = require('./lib/Jerk/lib/jerk');
 var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
 
