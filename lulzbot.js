@@ -8,7 +8,7 @@
 //passed in as input
 var sys = require('sys');
 var trackBranch = require('./trackBranch').trackBranch;
-var jerk = require('./lib/Jerk/lib/jerk');
+var Jerk = require('./lib/Jerk/lib/jerk');
 var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
 
@@ -16,7 +16,7 @@ var options = { server: 'irc.freenode.net',
                 nick: 'lulzbot',
                 channels: ['#stackvm']};
 
-jerk(function(j) {
+jerk = Jerk(function(j) {
     //weather action
     j.watch_for(/^!w(x|eather) (.+)$/, function (message) {
         getWeather(message.match_data[2],message.say);
