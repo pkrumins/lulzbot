@@ -8,7 +8,7 @@
 //passed in as input
 var sys = require('sys');
 var trackBranch = require('./trackBranch').trackBranch;
-var IRC = require('./lib/irc');
+var jerk = require('./lib/jerk');
 var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
 
@@ -16,14 +16,22 @@ var options = { server: 'irc.freenode.net',
                 nick: 'lulzbot',
                 channels: ['#stackvm']};
 
-var bot = new IRC(options);
-bot.connect(function() {setTimeout(bot.join(options.channels), 15000)});
+jerk(function(j) {
+    //weather action
+    j.watch_for(/^!w(x|eather) (.+)$/, function (message) {
+        getWeather(message.match_data[2],message.say);
+    });
+    //source
+    j.watch_for("!source", function (message) {
+        message.say("http://github.com/jesusabdullah/lulzbot/blob/master/lulzbot.js");
+    });
+}).connect(options);
 
 eventer = new EE();
 //Outside listeners
-eventer.addListener("git", function(x) { bot.privmsg('#stackvm', x) });
-eventer.addListener("weather", function(x) { bot.privmsg('#stackvm', x) });
-eventer.addListener("showsource", function() {bot.privmsg('#stackvm','http://github.com/jesusabdullah/lulzbot/blob/master/lulzbot.js'); });
+//This is kind of a leftover "wart" due to how trackBranch works. 
+//I plan to ditch this listener later.
+eventer.addListener("git", function(x) { jerk.say('#stackvm', x) });
 
 //tracked git branches
 trackBranch("substack", "dnode", "master",
@@ -43,17 +51,3 @@ trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
 trackBranch("jesusabdullah", "lulzbot", "master",
     function(shout) {eventer.emit("git", shout)});
 
-//bot listener
-bot.addListener('privmsg', function(msg) {
-    //Jerk has this.
-    //IRC-js chokes on parsing messages if there's a backtick in a nick
-    var text = msg.params.slice(-1).toString();
-    //weather action
-    wx = text.match("^!w(x|eather) (.+)");
-    if (wx !== null) {
-        sys.puts(wx[2])
-        getWeather(wx[2],function(shout) {eventer.emit("weather", shout);});
-    }
-    //source action
-    if (text.match("^!source") !== null) {eventer.emit("showsource");}
-});
