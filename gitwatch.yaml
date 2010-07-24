@@ -1,25 +1,32 @@
 ---# Github watched repos/branches
-substack:
+  substack:
     stackvm:
-        master:
-            - "#stackvm"
+      master:
+        channels:
+          - "#stackvm"
     dnode:
-        master:
-            - "#stackvm"
+      master:
+        channels:
+          - "#stackvm"
     js-traverse:
-        master:
-            - "#stackvm"
-pkrumins:
+      master:
+        channels:
+          - "#stackvm"
+  pkrumins:
     stackvm:
-        master:
-            - "#stackvm"
+      master:
+        channels:
+          - "#stackvm"
     node-jsmin:
-        master:
-            - "#stackvm"
-jesusabdullah:
+      master:
+        channels:
+          - "#stackvm"
+  jesusabdullah:
     lulzbot:
-        master:
-            - "#stackvm"
-    jesusabdullah.github.com:
-        master:
-            - "#stackvm"
+      master:
+        channels:
+          - "#stackvm"
+    "jesusabdullah.github.com":
+      master:
+        channels:
+          - "#stackvm"

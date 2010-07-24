@@ -7,22 +7,31 @@
 //TODO: Change trackBranch s.t. a single call with a heirarchical structure
 //passed in as input
 var sys = require('sys');
-var gh = new (require('./lib/github').GitHubApi)(true);
-var IRC = require('./lib/irc');
+var trackBranch = require('./trackBranch').trackBranch;
+var Jerk = require('./lib/Jerk/lib/jerk');
 var EE = require('events').EventEmitter;
-
+var getWeather = require('./weather').getWeather;
 
 var options = { server: 'irc.freenode.net',
                 nick: 'lulzbot',
                 channels: ['#stackvm']};
 
-var bot = new IRC(options);
-bot.connect(function() {bot.join(options.channels)});
+jerk = Jerk(function(j) {
+    //weather action
+    j.watch_for(/^!w(x|eather) (.+)$/, function (message) {
+        getWeather(message.match_data[2],message.say);
+    });
+    //source
+    j.watch_for("!source", function (message) {
+        message.say("http://github.com/jesusabdullah/lulzbot/blob/master/lulzbot.js");
+    });
+}).connect(options);
 
 eventer = new EE();
-//Listeners
-eventer.addListener("git", function(x) { bot.privmsg('#stackvm', x) });
-
+//Outside listeners
+//This is kind of a leftover "wart" due to how trackBranch works. 
+//I plan to ditch this listener later.
+eventer.addListener("git", function(x) { jerk.say('#stackvm', x) });
 
 //tracked git branches
 trackBranch("substack", "dnode", "master",
@@ -42,28 +51,3 @@ trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
 trackBranch("jesusabdullah", "lulzbot", "master",
     function(shout) {eventer.emit("git", shout)});
 
-
-function trackBranch(username, repo, branch, callback) {
-    gh.getCommitApi().getBranchCommits(username, repo, branch, checker );
-
-    function checker(err, commits) {
-        var oldCommitId = commits[0].id; //Set to 1 for testing (should be 0)
-        var greetz = ["Whoa Nelly!",
-                      "Zounds!",
-                      "Egads!",
-                      "Oh snap!",
-                      "Aack!"];
-        setInterval(function() {
-          gh.getCommitApi().getBranchCommits(username, repo, branch, 
-          function(err, commits) {
-            var i = 0;
-            while ( i < commits.length && commits[i].id !== oldCommitId ) {
-                if (i==0) {callback(greetz[Math.floor(Math.random(length(greetz)))]+"New commits to "+username+"/"+repo+" ("+branch+")!");}
-                callback("    * "+commits[i].author.name+": "+commits[i].message);
-                i++; }
-            if (commits[0].id !== oldCommitId) { 
-                callback("githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch);}
-            oldCommitId = commits[0].id});
-        }, 30000);
-    }
-}
