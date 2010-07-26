@@ -47,8 +47,6 @@ exports.gitwatch = function (callback) {
 
     //Checks for new commits in each branch
     function checkCommits(callback) {
-        sys.puts('checking for new commits...');
-
         var greetz = ["Whoa Nelly!",
                       "Zounds!",
                       "Egads!",
@@ -57,7 +55,10 @@ exports.gitwatch = function (callback) {
         for (usr in watchlist) {
             for (repo in watchlist[usr]) {
                 for (branch in watchlist[usr][repo]) {
+                sys.puts(usr + repo + branch);
                 channels = watchlist[usr][repo][branch].channels;
+                //Check for channels (DEBUG)
+                //for (i in channels) {sys.puts(i); sys.puts(channels[i]);}
                 //get list of commits, do stuff with it
                 gh.getCommitApi().getBranchCommits(usr,repo,branch, function (err,commits) {
                     //logic that prints out commits
@@ -73,6 +74,8 @@ exports.gitwatch = function (callback) {
                         commitlist=["    * "+commits[i].author.name+": "+commits[i].message].concat(commitlist);
                         i++; 
                     }
+                    //check for population of commitlist (DEBUG)
+                    for (i in commitlist) { sys.puts(commitlist[i]);}
                     if (commitlist.length > maxcommitlist) {
                         var newcommitlist = commitlist.slice(0,Math.floor(maxcommitlist/2));
                         newcommitlist.push("...");
@@ -82,7 +85,8 @@ exports.gitwatch = function (callback) {
                     }
                     for (i in commitlist) {
                         for (ind in channels) {
-                            callback(channels[ind], commitlist[i]);
+                            sys.puts(commitlist[i]);
+                            //callback(channels[ind], commitlist[i]);
                         }
                     }
                     if (commits[0].id !== watchlist[usr][repo][branch].lastCommit) { 
@@ -96,6 +100,5 @@ exports.gitwatch = function (callback) {
                 }
             }
         }
-    sys.puts('done!');
     }
 }
