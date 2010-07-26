@@ -21,9 +21,28 @@
       master:
         channels:
           - "#stackvm"
+    node-jpeg:
+      master:
+        channels:
+          - "#stackvm"
+    node-gif:
+      master:
+        channels:
+          - "#stackvm"
+    node-png:
+      master:
+        channels:
+          - "#stackvm"
+    node-video:
+      master:
+        channels:
+          - "#stackvm"
   jesusabdullah:
     lulzbot:
       master:
+        channels:
+          - "#stackvm"
+      trackbranchES:
         channels:
           - "#stackvm"
     "jesusabdullah.github.com":
