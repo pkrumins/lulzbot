@@ -27,5 +27,5 @@ jerk = Jerk(function(j) {
     });
 }).connect(options);
 
-gitwatch(jerk.say);
+gitwatch(sys.puts);
 
