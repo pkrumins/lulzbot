@@ -3,22 +3,33 @@ var fs = require('fs');
 var gh = new (require('./lib/github').GitHubApi)(true);
 var yaml = require('yaml');
 var sys = require('sys');
+var EE = require('events').EventEmitter;
 
 
 //var git = require('./yamltest').gitwatch; var sys = require('sys'); git(function(x,y) {sys.puts(x); sys.puts(y);});
 exports.gitwatch = function (callback) { 
     var yamlfile = './gitwatch.yaml';
-    var watchlist;
-    gwUpdate;
+    var watchlist = {};
+    gwUpdate();
+    //sys.puts(watchlist);
     fs.watchFile(yamlfile, gwUpdate);
-    setInterval(checkLastCommits(watchlist, callback),
+    setInterval(checkCommits(callback),
                 30000);
 
     //Call this to update the value of gitwatch
     function gwUpdate () {
-        sys.puts('Updating watchlist...');
-        getyaml(watchlist, 'utf-8', function (data) {gitwatch = data;});
-        checkLastCommits(watchlist);
+        getyaml(yamlfile, 'utf-8', function (data) {watchlist = data;});
+        for (usr in watchlist) {
+            for (repo in watchlist[usr]) {
+                for (branch in watchlist[usr][repo]) {
+                //watchlist[usr][repo][branch] --> channels
+                //                            |-> lastCommit
+                gh.getCommitApi().getBranchCommits(usr,repo,branch, function (err,commits) {
+                    watchlist[usr][repo][branch].lastCommit=commits[0].id;
+                    });
+                }
+            }
+        }
     }
 
     //Grabs the contents of a yaml file
@@ -30,23 +41,8 @@ exports.gitwatch = function (callback) {
         });
     }
 
-    //Checks for last commits in given branch
-    function checkLastCommits(watchlist) {
-        for (usr in watchlist) {
-            for (repo in usr) {
-                for (branch in repo) {
-                //gitwatch[usr][repo][branch] --> channels
-                //                            |-> lastCommit
-                gh.getCommitApi().getBranchCommits(usr,repo,branch, function (err,commits) {
-                    gitwatch[usr][repo][branch].lastCommit=commits[0].id;
-                    });
-                }
-            }
-        }
-    }
-
-    //Checks for last commits in given branch
-    function checkLastCommits(watchlist, callback) {
+    //Checks for new commits in each branch
+    function checkCommits(callback) {
         sys.puts('checking for new commits...');
 
         var greetz = ["Whoa Nelly!",
@@ -54,11 +50,13 @@ exports.gitwatch = function (callback) {
                       "Egads!",
                       "Oh snap!",
                       "Aack!"];
-
         for (usr in watchlist) {
             for (repo in watchlist[usr]) {
                 for (branch in watchlist[usr][repo]) {
-                channels = watchlist[usr][repo][branch].channels
+                sys.puts(usr);
+                sys.puts(repo);
+                sys.puts(branch);
+                channels = watchlist[usr][repo][branch].channels;
                 //The callback part might just work
                 gh.getCommitApi().getBranchCommits(usr,repo,branch, function (err,commits) {
                     //logic that prints out commits

@@ -7,7 +7,7 @@
 //TODO: Change trackBranch s.t. a single call with a heirarchical structure
 //passed in as input
 var sys = require('sys');
-var trackBranch = require('./trackBranch').trackBranch;
+var gitwatch = require('./yamltest').gitwatch;
 var Jerk = require('./lib/Jerk/lib/jerk');
 var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
@@ -27,27 +27,5 @@ jerk = Jerk(function(j) {
     });
 }).connect(options);
 
-eventer = new EE();
-//Outside listeners
-//This is kind of a leftover "wart" due to how trackBranch works. 
-//I plan to ditch this listener later.
-eventer.addListener("git", function(x) { jerk.say('#stackvm', x) });
-
-//tracked git branches
-trackBranch("substack", "dnode", "master",
-    function(shout) {eventer.emit("git", shout)} );
-trackBranch("substack", "js-traverse", "master", 
-    function(shout) {eventer.emit("git", shout)});
-trackBranch("substack", "stackvm", "master", 
-    function(shout) {eventer.emit("git", shout)});
-
-trackBranch("pkrumins", "node-jsmin", "master",
-    function(shout) {eventer.emit("git", shout)});
-trackBranch("pkrumins", "stackvm", "master",
-    function(shout) {eventer.emit("git", shout)});
-
-trackBranch("jesusabdullah", "jesusabdullah.github.com", "master",
-    function(shout) {eventer.emit("git", shout)});
-trackBranch("jesusabdullah", "lulzbot", "master",
-    function(shout) {eventer.emit("git", shout)});
+gitwatch(jerk.say);
 
