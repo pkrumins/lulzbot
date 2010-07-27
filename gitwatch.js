@@ -17,26 +17,27 @@ exports.gitwatch = function (callback) {
         fs.readFile(configfile, 'utf-8', function (err,stream) {
             if (err) throw err;
             watchlist = JSON.parse(stream);
-            });
-        for (u in watchlist) {
-            var user = watchlist[u].user;
-            for (r in watchlist[u].repos) {
-                var repo = watchlist[u].repos[r].name;
-                for (b in watchlist[u].repos[r].branches) {
-                    branch = watchlist[u].repos[r].branches[b];
-                    //fuxxing up the read-in json
-                    //for easier adding of last commit
-                    watchlist[u].repos[r].branches[b] = {name: branch, lastCommit: ''};
-                    gh.getCommitApi().getBranchCommits(user,repo,branch, function (err,commits) {
-                        watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
-                    });
+            for (u in watchlist) {
+                var user = watchlist[u].user;
+                for (r in watchlist[u].repos) {
+                    var repo = watchlist[u].repos[r].label;
+                    for (b in watchlist[u].repos[r].branches) {
+                        branch = watchlist[u].repos[r].branches[b];
+                        //fuxxing up the read-in json
+                        //for easier adding of last commit
+                        watchlist[u].repos[r].branches[b] = {label: branch, lastCommit: ''};
+                        gh.getCommitApi().getBranchCommits(user,repo,branch, function (err,commits) {
+                            watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
+                        });
+                        sys.puts(watchlist[u].repos[r].branches[b].lastCommit);
+                    }
                 }
             }
-        }
+        });
     }
 
 
-//Checks for new commits in each branch
+    //Checks for new commits in each branch
     function checkCommits(callback) {
         var greetz = ["Whoa Nelly!",
                       "Zounds!",
@@ -47,12 +48,18 @@ exports.gitwatch = function (callback) {
         for (u in watchlist) {
             var user = watchlist[u].user;
             for (r in watchlist[u].repos) {
-                var repo = watchlist[u].repos[r].name;
+                var repo = watchlist[u].repos[r].label;
                 for (b in watchlist[u].repos[r].branches) {
-                    branch = watchlist[u].repos[r].branches[b].name;
+                    branch = watchlist[u].repos[r].branches[b].label;
                     channels = watchlist[u].repos[r].channels;
                     //grab commits
+                    sys.puts(user);
+                    sys.puts(repo);
+                    sys.puts(branch);
                     gh.getCommitApi().getBranchCommits(user,repo,branch, function (err,commits) {
+                        if (err) {throw err;}
+                        sys.puts(commits);
+
                         var lastCommit = watchlist[u].repos[r].branches[b].lastCommit;
                         //logic that prints out commits
                         var maxcommitlist = 5;
