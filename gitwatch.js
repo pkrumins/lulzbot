@@ -87,13 +87,13 @@ exports.gitwatch = function (callback) {
                                         sys.puts('Im in ur msg assemblin loop');
                                         sys.puts(num);
                                         var commitsStr='\n'+commitsList[num]+commitsStr;
-                                        if (num === commitsList.length-1) {
-                                            msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
+                                    }
+                                    sys.puts('msg:'+msg);
+                                    sys.puts('commitsStr:\n\n'+commitsStr);
+                                    msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
                                                 +commitsStr
                                                 +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
-
-                                        }
-                                    }
+                                    sys.puts(mgs);
 
                                     //Launch torpedos
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
