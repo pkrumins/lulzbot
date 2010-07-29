@@ -65,10 +65,11 @@ exports.gitwatch = function (callback) {
                                     //I think it might be breaking this though.
                                     while (commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
                                         sys.puts('im in ur commit-fetching loop');
+                                        sys.puts(i);
+                                        sys.puts(commitsList);
                                         commitsList = ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
                                         i++;
                                         sys.puts(commitsList);
-                                        sys.puts(commitsList.length);
                                     }
                                     //What if we have TOO MANY COMMITS?
                                     if (commitsList.length > maxList) {
@@ -79,6 +80,7 @@ exports.gitwatch = function (callback) {
                                     }
                                     //Assemble message
                                     var commitsStr = "";
+                                    sys.puts('were about to assemble ur msg')
                                     sys.puts(commitsList);
                                     sys.puts(commitsList.length-1);
                                     for (num in commitsList) {
