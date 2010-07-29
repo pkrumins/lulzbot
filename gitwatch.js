@@ -81,10 +81,12 @@ exports.gitwatch = function (callback) {
                                         sys.puts('im in ur forEach loop');
                                         msg='\n'+item+msg;
                                     });
-                                    //Introductory remarks
-                                    msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"+msg;
-                                    //Don't forget the parting shot!
-                                    msg+="\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
+                                    //Introductory remarks and parting shot
+                                    msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
+                                       +msg
+                                       +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
+
+                                    //Launch torpedos
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
                                     //reset commits[0]
                                     watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
