@@ -65,7 +65,7 @@ exports.gitwatch = function (callback) {
                                     //I think it might be breaking this though.
                                     while (commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
                                         sys.puts('im in ur commit-fetching loop');
-                                        ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
+                                        commitsList = ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
                                         i++;
                                         sys.puts(commitsList.length);
                                     }
