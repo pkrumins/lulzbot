@@ -4,18 +4,11 @@ Lulzbot is an IRC bot that runs on node.js. So far, lulzbot only watches github 
 # dependencies
 
 * [node.js](http://nodejs.org) (of course)
-* [IRC-js](http://www.github.com/gf3/IRC-js)
+* [jerk](http://www.github.com/gf3/Jerk)
 * [node-github](http://www.github.com/ajaxorg/node-github)
 
-I considered using Jerk as well, but my needs extended past merely being able to parse and respond to irc events. As features are added, so may there be more deps.
 
-# todo
+# commands
 
-* Install libraries so that absolute paths are unnecessary
-* Add a configuration file
-* Add some reload action (possibly via the REPL)
-* Wrap bot up into a separate-able library?
-* Figure out why bot eventually "times out" when left alone and fix.
-* Allow more nuanced control of github watchings
-* Spruce up lulzbot's output, make more amusing
-* Cut off commit listings at some arbitrary number to avoid floods
+* **!weather** (or !wx) *search* : what's the weather?
+* **!source**: lists lulzbot's source's url

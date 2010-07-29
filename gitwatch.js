@@ -1,10 +1,8 @@
 //testing out yaml stuff
 var fs = require('fs');
 var gh = new (require('./lib/github').GitHubApi)(true);
-var yaml = require('yaml');
 var sys = require('sys');
 
-//var git = require('./yamltest').gitwatch; var sys = require('sys'); git(function(x,y) {sys.puts(x); sys.puts(y);});
 exports.gitwatch = function (callback) { 
     var configfile = './gitwatch.json';
     var watchlist = {};
