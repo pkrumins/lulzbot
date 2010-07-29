@@ -76,15 +76,15 @@ exports.gitwatch = function (callback) {
                                                      .concat("      ...")
                                                      .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
                                     }
-                                    //Tack commitsList onto msg
-                                    commitsList.forEach(function (item) {
-                                        sys.puts('im in ur forEach loop');
+                                    //Assemble message
+                                    commitsList.forEach(function (item, no) {
                                         msg='\n'+item+msg;
+                                        if (no===commitsList.length-1) {
+                                            msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
+                                               +msg
+                                               +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
+                                        }
                                     });
-                                    //Introductory remarks and parting shot
-                                    msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
-                                       +msg
-                                       +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
 
                                     //Launch torpedos
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
