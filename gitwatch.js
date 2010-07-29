@@ -93,7 +93,7 @@ exports.gitwatch = function (callback) {
                                     msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
                                                 +commitsStr
                                                 +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
-                                    sys.puts(mgs);
+                                    sys.puts(msg);
 
                                     //Launch torpedos
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
