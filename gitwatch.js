@@ -64,7 +64,7 @@ exports.gitwatch = function (callback) {
                                     //The most sane thing here would be to make sure commits[i] is defined.
                                     //I think it might be breaking this though.
                                     while (commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
-                                        sys.puts('im in ur commit-fetching loop');
+                                        //sys.puts('im in ur commit-fetching loop');
                                         sys.puts(i);
                                         sys.puts(commitsList);
                                         commitsList = ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
@@ -73,27 +73,27 @@ exports.gitwatch = function (callback) {
                                     }
                                     //What if we have TOO MANY COMMITS?
                                     if (commitsList.length > maxList) {
-                                        sys.puts('im in ur truncation loop');
+                                        //sys.puts('im in ur truncation loop');
                                         commitsList = commitsList.slice(0,Math.floor(maxList/2))
                                                      .concat("      ...")
                                                      .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
                                     }
                                     //Assemble message
                                     var commitsStr = "";
-                                    sys.puts('were about to assemble ur msg')
-                                    sys.puts(commitsList);
-                                    sys.puts(commitsList.length-1);
+                                    //sys.puts('were about to assemble ur msg')
+                                    //sys.puts(commitsList);
+                                    //sys.puts(commitsList.length-1);
                                     for (num in commitsList) {
-                                        sys.puts('Im in ur msg assemblin loop');
-                                        sys.puts(num);
+                                        //sys.puts('Im in ur msg assemblin loop');
+                                        //sys.puts(num);
                                         var commitsStr='\n'+commitsList[num]+commitsStr;
                                     }
-                                    sys.puts('msg:'+msg);
-                                    sys.puts('commitsStr:\n\n'+commitsStr);
+                                    //sys.puts('msg:'+msg);
+                                    //sys.puts('commitsStr:\n\n'+commitsStr);
                                     msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
                                                 +commitsStr
                                                 +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
-                                    sys.puts(msg);
+                                    //sys.puts(msg);
 
                                     //Launch torpedos
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
