@@ -62,12 +62,16 @@ exports.gitwatch = function (callback) {
                                     //build up list of new commits
                                     var commitsList=[];
                                     i=0;
-                                    while (commits[i] && commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
+                                    //The most sane thing here would be to make sure commits[i] is defined.
+                                    //I think it might be breaking this though.
+                                    while (commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
+                                        sys.puts('im in ur commit-fetching loop');
                                         ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
                                         i++;
                                     }
                                     //What if we have TOO MANY COMMITS?
                                     if (commitsList.length > maxList) {
+                                        sys.puts('im in ur truncation loop');
                                         commitsList = commitsList.slice(0,Math.floor(maxList/2))
                                                      .concat("      ...")
                                                      .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
