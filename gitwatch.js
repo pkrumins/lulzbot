@@ -10,26 +10,24 @@ exports.gitwatch = function (callback) {
     var watchlist = {};
     gwUpdate();
     fs.watchFile(configfile, gwUpdate);
-    setInterval(function () {checkCommits(callback);}, 15000);
+    setInterval(function () {checkCommits(callback);}, 30000);
 
     //Call this to update the value of gitwatch
     function gwUpdate () {
+        //sys.puts('updating!');
         fs.readFile(configfile, 'utf-8', function (err,stream) {
-            if (err) throw err;
+            if (err) {throw err;}
             watchlist = JSON.parse(stream);
             for (u in watchlist) {
-                var user = watchlist[u].user;
                 for (r in watchlist[u].repos) {
-                    var repo = watchlist[u].repos[r].label;
                     for (b in watchlist[u].repos[r].branches) {
-                        branch = watchlist[u].repos[r].branches[b];
-                        //fuxxing up the read-in json
-                        //for easier adding of last commit
-                        watchlist[u].repos[r].branches[b] = {label: branch, lastCommit: ''};
-                        gh.getCommitApi().getBranchCommits(user,repo,branch, function (err,commits) {
-                            watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
-                        });
-                        sys.puts(watchlist[u].repos[r].branches[b].lastCommit);
+                        watchlist[u].repos[r].branches[b] = {label: watchlist[u].repos[r].branches[b], lastCommit: undefined};
+                        (function (user,repo,branch) {
+                            gh.getCommitApi().getBranchCommits(user, repo, branch, function (err,commits) {
+                                if (err) { throw err; }
+                                watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
+                            });
+                        }).call(this, watchlist[u].user, watchlist[u].repos[r].label, watchlist[u].repos[r].branches[b].label);
                     }
                 }
             }
@@ -39,64 +37,54 @@ exports.gitwatch = function (callback) {
 
     //Checks for new commits in each branch
     function checkCommits(callback) {
-        var greetz = ["Whoa Nelly!",
-                      "Zounds!",
-                      "Egads!",
-                      "Oh snap!",
-                      "Aack!"];
-
         for (u in watchlist) {
-            var user = watchlist[u].user;
             for (r in watchlist[u].repos) {
-                var repo = watchlist[u].repos[r].label;
                 for (b in watchlist[u].repos[r].branches) {
                     branch = watchlist[u].repos[r].branches[b].label;
                     channels = watchlist[u].repos[r].channels;
-                    //grab commits
-                    sys.puts(user);
-                    sys.puts(repo);
-                    sys.puts(branch);
-                    gh.getCommitApi().getBranchCommits(user,repo,branch, function (err,commits) {
-                        if (err) {throw err;}
-                        sys.puts(commits);
+                    //If lastCommit hasn't been stored, then this won't work!
+                    if (watchlist[u].repos[r].branches[b].lastCommit) {
+                        //use these particular indices, because they'll change on you if not grabbed, saved, scoped
+                        (function (u,r,b) {
+                            gh.getCommitApi().getBranchCommits(watchlist[u].user,watchlist[u].repos[r].label,watchlist[u].repos[r].branches[b].label, function (err,commits) {
+                                var maxList = 5;
+                                var msg = "";
+                                var greetz = ["Whoa Nelly!",
+                                              "Zounds!",
+                                              "Egads!",
+                                              "Oh snap!",
+                                              "Aack!"];
 
-                        var lastCommit = watchlist[u].repos[r].branches[b].lastCommit;
-                        //logic that prints out commits
-                        var maxcommitlist = 5;
-                        var i = 0;
-                        var commitlist = [];
-                        while ( i < commits.length && commits[i].id !== lastCommit ) {
-                            if (i==0) {
-                                for (c in channels) {
-                                    callback(channels[c], greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+usr+"/"+repo+" ("+branch+")!"); 
+                                if (err) {throw err;}
+                                //If there are new commits...
+                                if (commits[0].id !== watchlist[u].repos[r].branches[b].lastCommit) {
+                                    msg+=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n";
+                                    //build up list of new commits
+                                    var commitsList=[];
+                                    i=0;
+                                    while (commits[i] && commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
+                                        ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
+                                        i++;
+                                    }
+                                    //What if we have TOO MANY COMMITS?
+                                    if (commitsList.length > maxList) {
+                                        commitsList = commitsList.slice(0,Math.floor(maxList/2))
+                                                     .concat("      ...")
+                                                     .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
+                                    }
+                                    //Reverse commitsList
+                                    commitsList.reverse();
+                                    //Tack commitsList onto msg
+                                    commitsList.forEach(function (item) {msg+='\n'+item;});
+                                    //Don't forget the parting shot!
+                                    msg+="\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
+                                    watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
+                                    //reset commits[0]
+                                    watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
                                 }
-                            }
-                            commitlist=["    * "+commits[i].author.name+": "+commits[i].message].concat(commitlist);
-                            i++; 
-                        }
-                        //check for population of commitlist (DEBUG)
-                        for (i in commitlist) { sys.puts(commitlist[i]);}
-                        if (commitlist.length > maxcommitlist) {
-                            var newcommitlist = commitlist.slice(0,Math.floor(maxcommitlist/2));
-                            newcommitlist.push("...");
-                            newcommitlist.push(commitlist.slice(commitlist.length-Math.floor(maxcommitlist/2),commitlist.length));
-                            newcommitlist.push("(And more! This list was truncated for brevity's sake.)");
-                            commitlist = newcommitlist;
-                        }
-                        for (i in commitlist) {
-                            for (ind in channels) {
-                                sys.puts(commitlist[i]);
-                                callback(channels[c], commitlist[i]);
-                            }
-                        }
-                        if (commits[0].id !== watchlist[usr][repo][branch].lastCommit) { 
-                            for (c in channels) {
-                                callback(channels[c], "githubs: http://github.com/"+username+"/"+repo+"/tree/"+branch);
-                            }
-                        }
-                        //updates lastCommit here
-                        watchlist[u].repos[r].branches[b].lastCommit = commits[0].id
-                    });
+                            });
+                        }).call(this,u,r,b); //using these particular indices (concurrency!)
+                    }
                 }
             }
         }
