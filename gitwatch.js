@@ -77,13 +77,12 @@ exports.gitwatch = function (callback) {
                                                      .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
                                     }
                                     //Assemble message
-                                    commitsList.forEach(function (item, no) {
-                                        msg='\n'+item+msg;
-                                        if (no===commitsList.length) {
-                                            msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
-                                               +msg
-                                               +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
-                                        }
+                                    for (no in commitsList) {
+                                        msg='\n'+commits[no]+msg;
+                                    }
+                                    msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
+                                       +msg
+                                       +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
                                     });
 
                                     //Launch torpedos
