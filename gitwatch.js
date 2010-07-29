@@ -58,7 +58,6 @@ exports.gitwatch = function (callback) {
                                 if (err) {throw err;}
                                 //If there are new commits...
                                 if (commits[0].id !== watchlist[u].repos[r].branches[b].lastCommit) {
-                                    msg+=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n";
                                     //build up list of new commits
                                     var commitsList=[];
                                     i=0;
@@ -76,10 +75,13 @@ exports.gitwatch = function (callback) {
                                                      .concat("      ...")
                                                      .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
                                     }
-                                    //Reverse commitsList
-                                    commitsList.reverse();
                                     //Tack commitsList onto msg
-                                    commitsList.forEach(function (item) {msg+='\n'+item;});
+                                    commitsList.forEach(function (item) {
+                                        sys.puts('im in ur forEach loop');
+                                        msg='\n'+item+msg;
+                                    });
+                                    //Introductory remarks
+                                    msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"+msg;
                                     //Don't forget the parting shot!
                                     msg+="\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
