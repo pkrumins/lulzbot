@@ -78,9 +78,10 @@ exports.gitwatch = function (callback) {
                                     }
                                     //Assemble message
                                     var commitsStr = "";
-                                    sys.puts(commitsList.length);
+                                    sys.puts(commitsList);
                                     sys.puts(commitsList.length-1);
                                     for (num in commitsList) {
+                                        sys.puts('Im in ur msg assemblin loop');
                                         sys.puts(num);
                                         var commitsStr='\n'+commitsList[num]+commitsStr;
                                         if (num === commitsList.length-1) {
