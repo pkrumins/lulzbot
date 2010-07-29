@@ -78,9 +78,12 @@ exports.gitwatch = function (callback) {
                                     }
                                     //Assemble message
                                     var commitsStr = "";
-                                    for (no in commitsList) {
-                                        var commitsStr='\n'+commitsList[no]+commitsStr;
-                                        if (no === commitsList.length-1) {
+                                    sys.puts(commitsList.length);
+                                    sys.puts(commitsList.length-1);
+                                    for (num in commitsList) {
+                                        sys.puts(num);
+                                        var commitsStr='\n'+commitsList[num]+commitsStr;
+                                        if (num === commitsList.length-1) {
                                             msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
                                                 +commitsStr
                                                 +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
