@@ -78,25 +78,22 @@ exports.gitwatch = function (callback) {
                                                      .concat("      ...")
                                                      .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
                                     }
-                                    //Assemble message
-                                    var commitsStr = "";
-                                    //sys.puts('were about to assemble ur msg')
-                                    //sys.puts(commitsList);
-                                    //sys.puts(commitsList.length-1);
-                                    for (num in commitsList) {
-                                        //sys.puts('Im in ur msg assemblin loop');
-                                        //sys.puts(num);
-                                        var commitsStr='\n'+commitsList[num]+commitsStr;
-                                    }
-                                    //sys.puts('msg:'+msg);
-                                    //sys.puts('commitsStr:\n\n'+commitsStr);
-                                    msg=greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
-                                                +commitsStr
-                                                +"\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label+'\n';
-                                    //sys.puts(msg);
 
-                                    //Launch torpedos
-                                    watchlist[u].repos[r].channels.forEach(function (c) {callback(c,msg);});
+                                    //Launch torpedoes
+                                    watchlist[u].repos[r].channels.forEach(function (c) {callback(c,
+                                        greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
+                                    );});
+                                    
+                                    watchlist[u].repos[r].channels.forEach(function (c) {
+                                        for (n in commitsList) {
+                                            callback(c,commitsList[n]);
+                                        }
+                                    });
+
+                                    watchlist[u].repos[r].channels.forEach(function (c) {callback(c,
+                                        "\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label
+                                    );});
+
                                     //reset commits[0]
                                     watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
                                 }
