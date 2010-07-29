@@ -16,7 +16,7 @@ var options = { server: 'irc.freenode.net',
                 nick: 'lulzbot',
                 channels: ['#stackvm']};
 
-
+/*
 jerk = Jerk(function(j) {
     //weather action
     j.watch_for(/^!w(x|eather) (.+)$/, function (message) {
@@ -27,6 +27,8 @@ jerk = Jerk(function(j) {
         message.say("http://github.com/jesusabdullah/lulzbot/blob/master/lulzbot.js");
     });
 }).connect(options);
+*/
 
-gitwatch(jerk.say);
+//gitwatch(jerk.say);
+gitwatch(function(x,y) {sys.puts(y)})
 
