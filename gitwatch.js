@@ -67,6 +67,7 @@ exports.gitwatch = function (callback) {
                                         sys.puts('im in ur commit-fetching loop');
                                         ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
                                         i++;
+                                        sys.puts(commitsList.length);
                                     }
                                     //What if we have TOO MANY COMMITS?
                                     if (commitsList.length > maxList) {
