@@ -22,12 +22,12 @@ exports.gitwatch = function (callback) {
                 for (r in watchlist[u].repos) {
                     for (b in watchlist[u].repos[r].branches) {
                         watchlist[u].repos[r].branches[b] = {label: watchlist[u].repos[r].branches[b], lastCommit: undefined};
-                        (function (user,repo,branch) {
-                            gh.getCommitApi().getBranchCommits(user, repo, branch, function (err,commits) {
+                        (function (u,r,b) {
+                            gh.getCommitApi().getBranchCommits(watchlist[u].user,watchlist[u].repos[r].label,watchlist[u].repos[r].branches[b].label, function (err,commits) {
                                 if (err) { throw err; }
                                 watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
                             });
-                        }).call(this, watchlist[u].user, watchlist[u].repos[r].label, watchlist[u].repos[r].branches[b].label);
+                        }).call(this, u,r,b);
                     }
                 }
             }
