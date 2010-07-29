@@ -65,11 +65,11 @@ exports.gitwatch = function (callback) {
                                     //I think it might be breaking this though.
                                     while (commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
                                         //sys.puts('im in ur commit-fetching loop');
-                                        sys.puts(i);
-                                        sys.puts(commitsList);
+                                        //sys.puts(i);
+                                        //sys.puts(commitsList);
                                         commitsList = ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
                                         i++;
-                                        sys.puts(commitsList);
+                                        //sys.puts(commitsList);
                                     }
                                     //What if we have TOO MANY COMMITS?
                                     if (commitsList.length > maxList) {
