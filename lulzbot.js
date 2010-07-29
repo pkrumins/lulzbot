@@ -30,5 +30,5 @@ jerk = Jerk(function(j) {
 */
 
 //gitwatch(jerk.say);
-gitwatch(function(x,y) {sys.puts(y)})
+gitwatch(function(x,y) {sys.puts(y)});
 
