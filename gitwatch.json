@@ -1,0 +1,75 @@
+[
+  {
+  "user": "substack"
+  ,"repos":
+    [
+      {
+      "label":"stackvm"
+      ,"branches": ["master", "dnode"]
+      ,"channels":["#stackvm"]
+      },
+      {
+      "label":"dnode"
+      ,"branches": ["master"]
+      ,"channels":["#stackvm"]
+      },
+      {
+      "label":"js-traverse"
+      ,"branches": ["master"]
+      ,"channels":["#stackvm"]
+      }
+    ]
+  },
+  {
+  "user": "pkrumins",
+  "repos":
+    [
+      {
+      "label":"stackvm"
+      ,"branches": ["master", "dnode"]
+      ,"channels":["#stackvm"]
+      },
+      {
+      "label":"node-jsmin",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"node-jpeg",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"node-png",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"node-gif",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"node-video",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      }
+    ]
+  },
+  {
+  "user": "jesusabdullah",
+  "repos":
+    [
+      {
+      "label":"lulzbot",
+      "branches": ["master", "trackbranchES"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"jesusabdullah.github.com",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      }
+    ]
+  }
+]
