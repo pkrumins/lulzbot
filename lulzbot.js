@@ -31,4 +31,7 @@ client.on('message', function (from, to, message) {
 });
 
 //gitwatch trigger
-gitwatch(client.say);
+gitwatch(function (chan, msg) {
+    sys.puts(chan,msg);
+    client.say(chan,msg);
+});
