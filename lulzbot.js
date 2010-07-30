@@ -1,10 +1,10 @@
-//TODO: Install libs s.t. abs. paths are unnecessary
 //TODO: Reload command/REPL action
 
 var sys = require('sys');
 var gitwatch = require('./gitwatch').gitwatch;
 var IRC = require('irc');
 var getWeather = require('./weather').getWeather;
+var ship = require('./onscreen').ship;
 
 var server = 'irc.freenode.net';
 var nick = 'lulzbot-X';
@@ -26,6 +26,11 @@ client.on('message', function (from, to, message) {
     if (matched = message.match("!source")) {
         client.say(to, "http://github.com/jesusabdullah/lulzbot");
     }
+
+    if (matched = message.match("!onscreen")) {
+        ship.forEach(function(x) {client.say(to, x);});
+    }
+
 });
 
 //gitwatch trigger
