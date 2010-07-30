@@ -4,7 +4,6 @@
 var sys = require('sys');
 var gitwatch = require('./gitwatch').gitwatch;
 var IRC = require('irc');
-var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
 
 var server = 'irc.freenode.net';
