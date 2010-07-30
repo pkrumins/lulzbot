@@ -62,7 +62,7 @@
     [
       {
       "label":"lulzbot",
-      "branches": ["master", "trackbranchES"],
+      "branches": ["master"],
       "channels":["#stackvm"]
       },
       {
