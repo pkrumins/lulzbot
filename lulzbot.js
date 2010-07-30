@@ -34,4 +34,8 @@ client.on('message', function (from, to, message) {
 });
 
 //gitwatch trigger
-gitwatch(client.say);
+gitwatch(function(dest,msg){
+    console.log(sys.inspect(dest));
+    console.log(sys.inspect(msg));
+    client.say(dest,msg);
+});
