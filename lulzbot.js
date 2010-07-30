@@ -3,7 +3,6 @@
 
 var sys = require('sys');
 var gitwatch = require('./gitwatch').gitwatch;
-//var Jerk = require('./lib/Jerk/lib/jerk');
 var IRC = require('irc');
 var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
@@ -31,7 +30,4 @@ client.on('message', function (from, to, message) {
 });
 
 //gitwatch trigger
-gitwatch(function (chan, msg) {
-    sys.puts(chan,msg);
-    client.say(chan,msg);
-});
+gitwatch(client.say);
