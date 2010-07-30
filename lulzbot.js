@@ -9,8 +9,8 @@ var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
 
 var server = 'irc.freenode.net';
-var nick = 'lulzbot';
-var options = { userName: 'lulzbotX',
+var nick = 'lulzbot-X';
+var options = { userName: 'lulzbot',
                 realName: 'LulzBot the node.js IRC bot!',
                 debug: true,
                 channels: ['#stackvm'] };
