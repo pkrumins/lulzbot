@@ -1,32 +1,34 @@
 //TODO: Install libs s.t. abs. paths are unnecessary
-//TODO: Test (require().s)() idea
-//TODO: Config file
 //TODO: Reload command/REPL action
-//TODO: Wrap bot up in something like a separate-able library a la Jerk?
-//TODO: Figure out why bot eventually "times out" and fix
-//TODO: Change trackBranch s.t. a single call with a heirarchical structure
-//passed in as input
+
 var sys = require('sys');
 var gitwatch = require('./gitwatch').gitwatch;
-var Jerk = require('./lib/Jerk/lib/jerk');
+//var Jerk = require('./lib/Jerk/lib/jerk');
+var IRC = require('irc');
 var EE = require('events').EventEmitter;
 var getWeather = require('./weather').getWeather;
 
-var options = { server: 'irc.freenode.net',
-                nick: 'lulzbot',
-                channels: ['#stackvm']};
+var server = 'irc.freenode.net';
+var nick = 'lulzbot';
+var options = { userName: 'lulzbotX',
+                realName: 'LulzBot the node.js IRC bot!',
+                debug: true,
+                channels: ['#stackvm'] };
 
-jerk = Jerk(function(j) {
-    //weather action
-    j.watch_for(/^!w(x|eather) (.+)$/, function (message) {
-        getWeather(message.match_data[2],message.say);
-    });
+var client = new IRC.Client(server, nick, options);
+
+//message-triggers
+client.on('message', function (from, to, message) {
+    //weather
+    if (matched = message.match(/^!w(x|eather) (.+)$/)) {
+        getWeather(matched,function (x) {client.say(to,x)});
+    }
+
     //source
-    j.watch_for("!source", function (message) {
-        message.say("http://github.com/jesusabdullah/lulzbot/blob/master/lulzbot.js");
-    });
-}).connect(options);
+    if (matched = message.match("!source")) {
+        client.say(to, "http://github.com/jesusabdullah/lulzbot");
+    }
+});
 
-gitwatch(jerk.say);
-//gitwatch(function(x,y) {sys.puts(y)});
-
+//gitwatch trigger
+gitwatch(client.say);
