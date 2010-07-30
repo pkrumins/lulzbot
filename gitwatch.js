@@ -78,6 +78,7 @@ exports.gitwatch = function (callback) {
                                     }
 
                                     //Launch torpedoes
+                                    //TODO: Make a single callback instead of fifty callbacks
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,
                                         greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!"
                                     );});
