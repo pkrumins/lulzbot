@@ -79,7 +79,7 @@ exports.gitwatch = function (callback) {
 
                                     //Launch torpedoes
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,
-                                        greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!\n"
+                                        greetz[Math.floor(Math.random()*greetz.length)]+" New commits to "+watchlist[u].user+"/"+watchlist[u].repos[r].label+" ("+watchlist[u].repos[r].branches[b].label+")!"
                                     );});
                                     
                                     watchlist[u].repos[r].channels.forEach(function (c) {
@@ -89,7 +89,7 @@ exports.gitwatch = function (callback) {
                                     });
 
                                     watchlist[u].repos[r].channels.forEach(function (c) {callback(c,
-                                        "\ngithubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label
+                                        "githubs: http://github.com/"+watchlist[u].user+"/"+watchlist[u].repos[r].label+"/tree/"+watchlist[u].repos[r].branches[b].label
                                     );});
 
                                     //reset commits[0]
