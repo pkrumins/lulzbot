@@ -29,8 +29,4 @@ client.on('message', function (from, to, message) {
 });
 
 //gitwatch trigger
-gitwatch(function(x,y) {
-    sys.puts(x);
-    sys.puts(y);
-    client.say(x,y);
-});
+gitwatch(client.say);
