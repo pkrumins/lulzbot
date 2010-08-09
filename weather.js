@@ -23,6 +23,7 @@ exports.getWeather = function getWeather (location, callback) {
                             "Mostly Sunny": "☼☁☼",
                             "Sunny": "☼☼☼",
                             "Clear": " ☼ ",
+                            "Mostly Clear": " ☁ ",
                             "Snow": "❄" };
 
                 return (lut[text]==null ? text : lut[text]+"("+text+")");

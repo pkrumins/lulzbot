@@ -1,4 +1,3 @@
-//testing out yaml stuff
 var fs = require('fs');
 var gh = new (require('./lib/github').GitHubApi)(true);
 var sys = require('sys');
@@ -16,7 +15,10 @@ exports.gitwatch = function (callback) {
     function gwUpdate () {
         //sys.puts('updating!');
         fs.readFile(configfile, 'utf-8', function (err,stream) {
-            if (err) {throw err;}
+            if (err) {
+                console.log("Oh snap gitwatch update broke: " + err);
+                //throw err;
+            } else {
             watchlist = JSON.parse(stream);
             for (u in watchlist) {
                 for (r in watchlist[u].repos) {
@@ -41,6 +43,7 @@ exports.gitwatch = function (callback) {
                         }).call(this, u,r,b);
                     }
                 }
+            }
             }
         });
     }
@@ -67,8 +70,14 @@ exports.gitwatch = function (callback) {
                                                   "Egads!",
                                                   "Oh snap!",
                                                   "Aack!"];
+                                    //crappy hack thrown in to make sure I don't time out Github
+                                    var date = new Date();
+                                    var curDate = null;
+                                    do {curDate = new Date();}while(curDate-date < 1000);
 
-                                    if (err) {throw err;}
+                                    if (err) {
+                                        console.log("Bollocks! Gitwatching broke: " + err);
+                                    } else {
                                     //If there are new commits...
                                     if (commits[0].id !== watchlist[u].repos[r].branches[b].lastCommit) {
                                         //build up list of new commits
@@ -112,6 +121,7 @@ exports.gitwatch = function (callback) {
                                         watchlist[u].repos[r].branches[b].lock = true;
                                         watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
                                         watchlist[u].repos[r].branches[b].lock = false;
+                                    }
                                     }
                                 });
                             }

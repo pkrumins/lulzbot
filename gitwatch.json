@@ -17,6 +17,11 @@
       "label":"js-traverse"
       ,"branches": ["master"]
       ,"channels":["#stackvm"]
+      },
+      {
+      "label": "node-rfb"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
       }
     ]
   },
@@ -53,6 +58,16 @@
       "label":"node-video",
       "branches": ["master"],
       "channels":["#stackvm"]
+      },
+      {
+      "label":"node-rfb",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"node-image",
+      "branches": ["master"],
+      "channels": ["#stackvm"]
       }
     ]
   },

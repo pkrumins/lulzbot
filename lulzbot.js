@@ -2,7 +2,7 @@
 
 var sys = require('sys');
 var gitwatch = require('./gitwatch').gitwatch;
-var IRC = require('irc');
+var IRC = require('./lib/node-irc/lib/irc');
 var getWeather = require('./weather').getWeather;
 var ship = require('./onscreen').ship;
 
@@ -11,7 +11,8 @@ var nick = 'lulzbot-X';
 var options = { userName: 'lulzbot',
                 realName: 'LulzBot the node.js IRC bot!',
                 debug: true,
-                channels: ['#stackvm'] };
+                channels: ['#stackvm'],
+                retryCount: 5 };
 
 var client = new IRC.Client(server, nick, options);
 
