@@ -22,6 +22,11 @@
       "label": "node-rfb"
       ,"branches":["master"]
       ,"channels":["#stackvm"]
+      },
+      {
+      "label": "node-chess"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
       }
     ]
   },
@@ -68,6 +73,11 @@
       "label":"node-image",
       "branches": ["master"],
       "channels": ["#stackvm"]
+      },
+      {
+      "label": "node-chess"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
       }
     ]
   },
@@ -84,6 +94,11 @@
       "label":"jesusabdullah.github.com",
       "branches": ["master"],
       "channels":["#stackvm"]
+      },
+      {
+      "label": "node-chess"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
       }
     ]
   }
