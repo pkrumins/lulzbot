@@ -10,6 +10,8 @@ var IRC = require('./lib/node-irc/lib/irc');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 
+console.log("Starting irc relay...");
+
 var ircserver = 'irc.freenode.net';
 var nick = 'lulzbot-X';
 var options = { userName: 'lulzbot',
