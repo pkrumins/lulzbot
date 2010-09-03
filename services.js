@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 //"Client," which gives access to all the modules via dnode
 
 var sys = require('sys');
@@ -8,7 +10,7 @@ var gitwatch = require('./gitwatch').gitwatch;
 var getWeather = require('./weather').getWeather;
 var spaceship = require('./onscreen').ship;
 
-
+console.log("Starting dnode \"client\" on port 12321.");
 DNode({
     triggers: function (msg, cb) {
         if (matched = msg.match(/^!w(x|eather) (.+)$/)) {
