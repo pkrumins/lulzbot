@@ -96,6 +96,16 @@
       "channels":["#stackvm"]
       },
       {
+      "label":"anisotropy",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"anisotropy_fem",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
       "label": "node-chess"
       ,"branches":["master"]
       ,"channels":["#stackvm"]
