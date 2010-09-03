@@ -1,4 +1,4 @@
-//"Client," which runs the IRC side of things
+//"Server," which runs the IRC side of things
 
 var sys = require('sys');
 var DNode = require('dnode');
@@ -14,15 +14,18 @@ var options = { userName: 'lulzbot',
 
 var irc = new IRC.Client(server, nick, options);
 
-DNode.connect(12321, function(services) {
-    //message triggers
-    irc.on('message', function (from, to, message) {
-        services.triggers(message,function(reply) {
-            irc.say(to, reply);
+DNode(function(services) {
+    this.triggers = function () {
+        irc.on('message', function (from, to, message) {
+            services.triggers(message,function(reply) {
+                irc.say(to, reply);
+            });
         });
-    });
+    };
 
-    //subscribed services
-    services.subscribe(irc.say);
-});
+    this.subscriptions = function () {
+        //args: to, reply
+        services.subscriptions(irc.say);
+    };
 
+}).listen(12321);

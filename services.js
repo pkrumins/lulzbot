@@ -1,4 +1,4 @@
-//"Server," which gives access to all the modules via dnode
+//"Client," which gives access to all the modules via dnode
 
 var sys = require('sys');
 var DNode = require('dnode');
@@ -29,8 +29,11 @@ DNode({
         }
     },
 
-    subscribe: function (cb) {
+    subscriptions: function (cb) {
         gitwatch(cb);
     }
 
-}).listen(12321);
+}).connect(12321, function (irc) {
+    irc.triggers();
+    irc.subscriptions();
+});
