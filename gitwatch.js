@@ -41,6 +41,8 @@ exports.gitwatch = function (callback) {
                 watchlist = JSON.parse(stream);
                 console.log("Initializing watchlist...");
                 tripleLoop(function (u,r,b) {
+                    //Reorganize the object first to have a lastCommit and a label field!
+                    watchlist[u].repos[r].branches[b] = {label: watchlist[u].repos[r].branches[b], lastCommit: undefined};
                     gh.getCommitApi().getBranchCommits(watchlist[u].user,
                                                        watchlist[u].repos[r].label,
                                                        watchlist[u].repos[r].branches[b].label,
@@ -57,6 +59,7 @@ exports.gitwatch = function (callback) {
                         }
                     }); //closes api callback
                 }); //closes triple loop
+                console.log("...done.")
             } //closes listlock check
         }); //closes readFile
     }
