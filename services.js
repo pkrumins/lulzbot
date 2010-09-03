@@ -2,6 +2,7 @@
 
 var sys = require('sys');
 var DNode = require('dnode');
+var spawn = require('child_process').spawn
 
 var gitwatch = require('./gitwatch').gitwatch;
 var getWeather = require('./weather').getWeather;
@@ -17,7 +18,14 @@ DNode({
             spaceship.forEach(cb);
         }
         if (matched = msg.match("!source")) {
-            cb("http://github.com/jesusabdullah/lulzbot");
+            var git = spawn("git", ["branch"]);
+            git.stdout.on('data', function (branches) {
+                    var sed = spawn("sed", ["-n", "-e", "s/^\* \(.*\)/\1/p"]);
+                    sed.stdin.write(branches);
+                    sed.stdout.on('data', function (currentBranch) {
+                        cb("http://github.com/jesusabdullah/lulzbot/tree/"+currentBranch);
+                    });
+                });
         }
     },
 
