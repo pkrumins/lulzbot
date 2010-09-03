@@ -18,28 +18,6 @@ var options = { userName: 'lulzbot',
 
 var irc = new IRC.Client(ircserver, nick, options);
 
-//Some logics that run the server as a separate process
-var server = function () {
-    var srv = spawn("node", ["services.js"]);
-    srv.stdout.on("data", function (data) {
-        console.log("Server data: "+data);
-    });
-    srv.stderr.on("data", function (data) {
-        console.log("Server error: "+data);
-    });
-    srv.on('exit', function (code) {
-        console.log("Server exited with status "+code);
-        console.log("Restarting.");
-        server();
-    });
-    fs.watchFile("services.js", function () {
-        console.log("Server code changed!");
-        console.log("Restarting it.");
-        srv.kill();
-        server();
-    });
-}
-
 //Using dnode to call services
 DNode(function(services) {
     this.triggers = function () {
@@ -56,6 +34,3 @@ DNode(function(services) {
     };
 
 }).listen(12321);
-
-//Runs the server
-server();
