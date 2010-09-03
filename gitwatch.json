@@ -101,7 +101,7 @@
       "channels":["#stackvm"]
       },
       {
-      "label":"anisotropy_fem",
+      "label":"anisotropy_fea",
       "branches": ["master"],
       "channels":["#stackvm"]
       },
