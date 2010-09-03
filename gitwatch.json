@@ -17,6 +17,16 @@
       "label":"js-traverse"
       ,"branches": ["master"]
       ,"channels":["#stackvm"]
+      },
+      {
+      "label": "node-rfb"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
+      },
+      {
+      "label": "node-chess"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
       }
     ]
   },
@@ -53,6 +63,21 @@
       "label":"node-video",
       "branches": ["master"],
       "channels":["#stackvm"]
+      },
+      {
+      "label":"node-rfb",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"node-image",
+      "branches": ["master"],
+      "channels": ["#stackvm"]
+      },
+      {
+      "label": "node-chess"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
       }
     ]
   },
@@ -69,6 +94,21 @@
       "label":"jesusabdullah.github.com",
       "branches": ["master"],
       "channels":["#stackvm"]
+      },
+      {
+      "label":"anisotropy",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label":"anisotropy_fea",
+      "branches": ["master"],
+      "channels":["#stackvm"]
+      },
+      {
+      "label": "node-chess"
+      ,"branches":["master"]
+      ,"channels":["#stackvm"]
       }
     ]
   }

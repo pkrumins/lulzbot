@@ -1,41 +1,61 @@
-//TODO: Reload command/REPL action
+//"Server," which runs the IRC side of things
 
 var sys = require('sys');
-var gitwatch = require('./gitwatch').gitwatch;
-var IRC = require('irc');
-var getWeather = require('./weather').getWeather;
-var ship = require('./onscreen').ship;
 
-var server = 'irc.freenode.net';
+var DNode = require('dnode');
+
+var IRC = require('./lib/node-irc/lib/irc');
+var spawn = require('child_process').spawn;
+var fs = require('fs');
+
+var ircserver = 'irc.freenode.net';
 var nick = 'lulzbot-X';
 var options = { userName: 'lulzbot',
                 realName: 'LulzBot the node.js IRC bot!',
                 debug: true,
-                channels: ['#stackvm'] };
+                channels: ['#stackvm'],
+                retryCount: 5 };
 
-var client = new IRC.Client(server, nick, options);
+var irc = new IRC.Client(ircserver, nick, options);
 
-//message-triggers
-client.on('message', function (from, to, message) {
-    //weather
-    if (matched = message.match(/^!w(x|eather) (.+)$/)) {
-        getWeather(matched,function (x) {client.say(to,x)});
-    }
+//Some logics that run the server as a separate process
+var server = function () {
+    var srv = spawn("node", ["services.js"]);
+    srv.stdout.on("data", function (data) {
+        console.log("Server data: "+data);
+    });
+    srv.stderr.on("data", function (data) {
+        console.log("Server error: "+data);
+    });
+    srv.on('exit', function (code) {
+        console.log("Server exited with status "+code);
+        console.log("Restarting.");
+        server();
+    });
+    fs.watchFile("services.js", function () {
+        console.log("Server code changed!");
+        console.log("Restarting it.");
+        srv.kill();
+        server();
+    });
+}
 
-    //source
-    if (matched = message.match("!source")) {
-        client.say(to, "http://github.com/jesusabdullah/lulzbot");
-    }
+//Using dnode to call services
+DNode(function(services) {
+    this.triggers = function () {
+        irc.on('message', function (from, to, message) {
+            services.triggers(message,function(reply) {
+                irc.say(to, reply);
+            });
+        });
+    };
 
-    if (matched = message.match("!onscreen")) {
-        ship.forEach(function(x) {client.say(to, x);});
-    }
+    this.subscriptions = function () {
+        //args: to, reply
+        services.subscriptions(irc.say);
+    };
 
-});
+}).listen(12321);
 
-//gitwatch trigger
-gitwatch(function(dest,msg){
-    console.log(sys.inspect(dest));
-    console.log(sys.inspect(msg));
-    client.say(dest,msg);
-});
+//Runs the server
+server();
