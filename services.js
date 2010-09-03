@@ -23,7 +23,7 @@ DNode({
                     var sed = spawn("sed", ["-n", "-e", "s/^\* \(.*\)/\1/p"]);
                     sed.stdin.write(branches);
                     sed.stdout.on('data', function (currentBranch) {
-                        cb("http://github.com/jesusabdullah/lulzbot/tree/"+currentBranch);
+                        cb("http://github.com/jesusabdullah/lulzbot/tree/"+sys.inspect(currentBranch));
                     });
                 });
         }
