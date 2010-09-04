@@ -4,7 +4,7 @@
 
 var sys = require('sys');
 var DNode = require('dnode');
-var spawn = require('child_process').spawn;
+var getBranch = require('./branch');
 
 var gitwatch = require('./gitwatch').gitwatch;
 var getWeather = require('./weather').getWeather;
@@ -20,14 +20,8 @@ DNode({
             spaceship.forEach(cb);
         }
         if (matched = msg.match("!source")) {
-            var getbranch = spawn("./branch.sh");
-            getbranch.stdout.on('data', function (data) {
-                var branch = data.toString("utf-8");
-                branch = branch.slice(0,branch.length-1);
+            getBranch(function (branch) {
                 cb("http://github.com/jesusabdullah/lulzbot/tree/"+branch+"/");
-            });
-            getbranch.stderr.on('data', function (data) {
-                console.log("There was a source-getting error: "+data.toString("utf-8"));
             });
         }
     },
