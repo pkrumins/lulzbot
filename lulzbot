@@ -1,5 +1,39 @@
-#!/bin/bash
+#!/usr/bin/env node
 
-node d.js relay.js &
-node d.js services.js &
-node d.js synchronise.sh
+/*
+This is a script that runs all the necessary processes for me.  Ideally, we'd
+have some generalized mix of isaac's Supervisor and lrbabe's d.js, but for now
+this ad-hoc solution will do. Assuming it works.
+*/
+
+var fs = require('fs');
+var spawn = require('child_process').spawn;
+
+//A generalized function that runs things and watches things
+function run(runthis, watchthese) {
+    var self = this;
+    var running = spawn(runthis);
+    running.on('exit', self);
+    if (watchthese) {
+        watchthese.concat([runthis])
+                  .forEach(function (file) {
+            fs.watchFile(file, function () {
+                //kills the services so that exit event can restart it. Hopefully.
+                running.kill();
+                //cleanup
+                watchthese.forEach(fs.unwatchFile);
+            });
+        });
+    }
+    running.stdout.on('data', function(data) {
+        console.log(runthis+': '+ data.toString("utf-8"));
+    });
+    running.stderr.on('data', function(data) {
+        console.log(runthis+' ERROR: '+ data.toString("utf-8"));
+    });
+}
+
+//Run everything
+var synchronize = run('./synchronize.js');
+var relay = run('./relay.js');
+var services = run('./services.js');
