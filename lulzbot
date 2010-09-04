@@ -1,0 +1,5 @@
+#!/bin/bash
+
+node d.js relay.js &
+node d.js services.js &
+node d.js synchronise.sh
