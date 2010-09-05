@@ -16,7 +16,9 @@ function run(runthis, watchthese) {
     running.on('exit', function () {
         run(runthis, watchthese);
     });
-
+    if (!watchthese) {
+        var watchthese = [];
+    }
     watchthese.concat([runthis])
               .forEach(function (file) {
         fs.watchFile(file, function () {
@@ -36,6 +38,8 @@ function run(runthis, watchthese) {
 }
 
 //Run everything
-//var synchronize = run('synchronize.js');
+if (process.argv[2] === '-sync') {
+    var synchronize = run('synchronize.js');
+}
 var relay = run('relay.js');
 var services = run('services.js', ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js', ]);
