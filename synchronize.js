@@ -3,6 +3,7 @@
 //An experiment in auto-watching github
 
 var getBranch = require('./branch');
+var spawn = require('child_process').spawn;
 
 console.log('Beginning synchronization loop...');
 
