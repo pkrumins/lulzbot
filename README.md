@@ -15,6 +15,7 @@ Lulzbot is an IRC bot that runs on node.js, and lives in #stackvm.
 * **!weather** (or !wx) *search* : what's the weather?
 * **!source**: lists lulzbot's source's url for the active branch
 * **!onscreen**: prints out some kinda Klingon spaceship
+* **!lns**: Shortens urls using ln-s.net
 
 # services
 
@@ -23,5 +24,4 @@ Lulzbot is an IRC bot that runs on node.js, and lives in #stackvm.
 # future
 
 * **twitterwatch** to watch twitter for mentions of stackvm
-* **!ln-s** or something similar to shorten urls
 * **persistence** to save settings between restarts, probably with nStore

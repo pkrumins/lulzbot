@@ -28,6 +28,10 @@ DNode({
                 cb("http://github.com/jesusabdullah/lulzbot/tree/"+branch+"/");
             });
         }
+        if (matched = msg.match("!help")) {
+            cb("http://github.com/jesusabdullah/lulzbot/blob/master/README.md");
+            cb("Warning: May be outta date.");
+        }
         if (matched = msg.match(/^!lns (.+)$/)) {
             console.log('lns match: '+matched[matched.length-1]);
             lns(matched[matched.length-1],cb);
