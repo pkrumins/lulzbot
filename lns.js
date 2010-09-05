@@ -13,7 +13,7 @@ module.exports = function(url, cb) {
     }
 
     var client = http.createClient(80, 'www.ln-s.net');
-    var query = querystring.stringify({url: url});
+    var query = querystring.stringify({url: urlify(url)});
 
     var request = client.request('POST', '/home/api.jsp?'+query, {host: 'ln-s.net'});
     request.on('response', function (response) {

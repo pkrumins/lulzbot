@@ -5,6 +5,7 @@
 var sys = require('sys');
 var DNode = require('dnode');
 var getBranch = require('./branch');
+var sys = require('sys');
 
 var gitwatch = require('./gitwatch').gitwatch;
 var getWeather = require('./weather').getWeather;
@@ -15,7 +16,9 @@ console.log("Starting dnode \"client\" on port 12321.");
 DNode({
     triggers: function (msg, cb) {
         if (matched = msg.match(/^!w(x|eather) (.+)$/)) {
-            getWeather(matched,cb);
+            console.log('wx match: '+sys.inspect(matched));
+            console.log(matched.length);
+            getWeather(matched[matched.length-1],cb);
         }
         if (matched = msg.match("!onscreen")) {
             spaceship.forEach(cb);
@@ -26,7 +29,8 @@ DNode({
             });
         }
         if (matched = msg.match(/^!lns (.+)$/)) {
-            lns(matched,cb);
+            console.log('lns match: '+matched[matched.length-1]);
+            lns(matched[matched.length-1],cb);
         }
     },
 

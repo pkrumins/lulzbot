@@ -12,7 +12,7 @@ var sys = require('sys');
 
 //A generalized function that runs things and watches things
 function run(runthis, watchthese) {
-    var running = spawn(runthis);
+    var running = spawn('node', [runthis]);
     running.on('exit', function () {
         run(runthis, watchthese);
     });
@@ -37,6 +37,6 @@ function run(runthis, watchthese) {
 }
 
 //Run everything
-var synchronize = run('./synchronize.js');
-var relay = run('./relay.js');
-var services = run('./services.js');
+var synchronize = run('synchronize.js');
+var relay = run('relay.js');
+var services = run('services.js', ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js', ]);
