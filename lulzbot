@@ -8,12 +8,14 @@ this ad-hoc solution will do. Assuming it works.
 
 var fs = require('fs');
 var spawn = require('child_process').spawn;
+var sys = require('sys');
 
 //A generalized function that runs things and watches things
 function run(runthis, watchthese) {
-    var self = this;
     var running = spawn(runthis);
-    running.on('exit', self);
+    running.on('exit', function () {
+        run(runthis, watchthese);
+    });
     if (watchthese) {
         watchthese.concat([runthis])
                   .forEach(function (file) {
@@ -26,10 +28,10 @@ function run(runthis, watchthese) {
         });
     }
     running.stdout.on('data', function(data) {
-        console.log(runthis+': '+ data.toString("utf-8"));
+        sys.puts(runthis+': '+ data.toString("utf-8"));
     });
     running.stderr.on('data', function(data) {
-        console.log(runthis+' ERROR: '+ data.toString("utf-8"));
+        sys.puts(runthis+' ERROR: '+ data.toString("utf-8"));
     });
 }
 

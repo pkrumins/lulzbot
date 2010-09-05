@@ -7,8 +7,8 @@ module.exports = function (cb) {
     var getBranch = spawn("./branch.sh");
 
     getBranch.stdout.on('data', function (data) {
-        var branch = data.toString("utf-8")
-                         .slice(0,branch.length-1);
+        var branch = data.toString("utf-8");
+        branch = branch.slice(0,branch.length-1);
         cb(branch);
     });
 
