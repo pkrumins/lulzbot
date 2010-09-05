@@ -16,18 +16,17 @@ function run(runthis, watchthese) {
     running.on('exit', function () {
         run(runthis, watchthese);
     });
-    if (watchthese) {
-        watchthese.concat([runthis])
-                  .forEach(function (file) {
-            fs.watchFile(file, function () {
-                sys.puts(runthis+': '+file+' updated! Going to restart...');
-                //kills the services so that exit event can restart it. Hopefully.
-                running.kill();
-                //cleanup
-                watchthese.forEach(fs.unwatchFile);
-            });
+
+    watchthese.concat([runthis])
+              .forEach(function (file) {
+        fs.watchFile(file, function () {
+            sys.puts(runthis+': '+file+' updated! Going to restart...');
+            //kills the services so that exit event can restart it. Hopefully.
+            running.kill();
+            //cleanup
+            watchthese.forEach(fs.unwatchFile);
         });
-    }
+    });
     running.stdout.on('data', function(data) {
         sys.puts(runthis+': '+ data.toString("utf-8"));
     });
@@ -37,6 +36,6 @@ function run(runthis, watchthese) {
 }
 
 //Run everything
-var synchronize = run('synchronize.js');
+//var synchronize = run('synchronize.js');
 var relay = run('relay.js');
 var services = run('services.js', ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js', ]);
