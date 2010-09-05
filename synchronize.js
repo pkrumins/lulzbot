@@ -11,7 +11,13 @@ console.log('Beginning synchronization loop...');
 setInterval(function () {
     console.log('synchronizing...');
     getBranch(function (branch) {
-        spawn('git', ['pull', 'origin', branch]);
+        var git = spawn('git', ['pull', 'origin', branch]);
+        git.stdout.on('data', function (data) {
+            console.log('git: '+data.toString('utf-8'));
+        });
+        git.stderr.on('data', function (data) {
+            console.log('git error: '+data.toString('utf-8'));
+        });
     });
     console.log('...done.');
 }, 120000); //...every 2 minutes or so
