@@ -6,7 +6,8 @@ Lulzbot is an IRC bot that runs on node.js, and lives in #stackvm.
 * [node.js](http://nodejs.org) (of course)
 * [node-github](http://github.com/ajaxorg/node-github) (in lib/)
 * [node-irc](http://github.com/martynsmith/node-irc) (in lib/)
-* [DNode](http://github.com/substack/dnode) and its dependencies (via NPM)
+* [DNode](http://github.com/substack/dnode) and its dependencies (via npm)
+* [yql](http://github.com/drgath/node-yql) (via npm)
 
 
 # commands
