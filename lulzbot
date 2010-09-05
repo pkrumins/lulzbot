@@ -20,6 +20,7 @@ function run(runthis, watchthese) {
         watchthese.concat([runthis])
                   .forEach(function (file) {
             fs.watchFile(file, function () {
+                sys.puts(runthis+': '+file+' updated! Going to restart...');
                 //kills the services so that exit event can restart it. Hopefully.
                 running.kill();
                 //cleanup

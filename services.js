@@ -9,6 +9,7 @@ var getBranch = require('./branch');
 var gitwatch = require('./gitwatch').gitwatch;
 var getWeather = require('./weather').getWeather;
 var spaceship = require('./onscreen').ship;
+var lns = require('./lns');
 
 console.log("Starting dnode \"client\" on port 12321.");
 DNode({
@@ -23,6 +24,9 @@ DNode({
             getBranch(function (branch) {
                 cb("http://github.com/jesusabdullah/lulzbot/tree/"+branch+"/");
             });
+        }
+        if (matched = msg.match(/^!lns (.+)$/)) {
+            lns(matched,cb);
         }
     },
 
