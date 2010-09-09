@@ -1,5 +1,5 @@
 var fs = require('fs');
-var gh = new (require('./lib/node-github/lib/github').GitHubApi)(true);
+var github = new (require('github').GitHubApi)(true);
 var sys = require('sys');
 
 exports.gitwatch = function (callback) { 
@@ -43,7 +43,7 @@ exports.gitwatch = function (callback) {
                 tripleLoop(function (u,r,b) {
                     //Reorganize the object first to have a lastCommit and a label field!
                     watchlist[u].repos[r].branches[b] = {label: watchlist[u].repos[r].branches[b], lastCommit: undefined};
-                    gh.getCommitApi().getBranchCommits(watchlist[u].user,
+                    github.getCommitApi().getBranchCommits(watchlist[u].user,
                                                        watchlist[u].repos[r].label,
                                                        watchlist[u].repos[r].branches[b].label,
                                                        function (err,commits) {
@@ -83,7 +83,7 @@ exports.gitwatch = function (callback) {
             tripleLoop(function (u,r,b) {
                 //Checks for the existence of lastCommit
                 if (watchlist[u].repos[r].branches[b].lastCommit) {
-                    gh.getCommitApi().getBranchCommits(watchlist[u].user,
+                    github.getCommitApi().getBranchCommits(watchlist[u].user,
                                                        watchlist[u].repos[r].label,
                                                        watchlist[u].repos[r].branches[b].label,
                                                        function (err,commits) {
