@@ -2,6 +2,9 @@ var fs = require('fs');
 var github = new (require('github').GitHubApi)(true);
 var sys = require('sys');
 
+//var nStore = require('nStore');
+//var db = nStore('./gitwatch.db');
+
 exports.gitwatch = function (callback) { 
     //What Happens
     var configfile = './gitwatch.json';
