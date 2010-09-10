@@ -4,13 +4,12 @@
 
 var sys = require('sys');
 var DNode = require('dnode');
-var getBranch = require('./branch');
-var sys = require('sys');
+var getBranch = require('../plugins/branch');
 
-var gitwatch = require('./gitwatch').gitwatch;
-var getWeather = require('./weather').getWeather;
-var spaceship = require('./onscreen').ship;
-var lns = require('./lns');
+var gitwatch = require('../plugins/gitwatch').gitwatch;
+var getWeather = require('../plugins/weather').getWeather;
+var spaceship = require('../plugins/onscreen').ship;
+var lns = require('../plugins/lns');
 
 console.log("Starting dnode \"client\" on port 12321.");
 DNode({

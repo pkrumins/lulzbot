@@ -6,21 +6,26 @@ have some generalized mix of isaac's Supervisor and lrbabe's d.js, but for now
 this ad-hoc solution will do. Assuming it works.
 */
 
+require('optimist')
+    .usage('Usage: $0 OPTIONS\n'
+        + '    Required OPTIONS: --server --nick\n'
+        + '    Other OPTIONS: --username --realname --channel')
+    .demand([ 'server', 'nick' ]);
+
 var fs = require('fs');
 var spawn = require('child_process').spawn;
 var sys = require('sys');
 
 //A generalized function that runs things and watches things
-function run(runthis, watchthese) {
-    var running = spawn('node', [runthis]);
+function run(runthis, args, watchthese) {
+    var running = spawn('node', [runthis].concat(args));
     running.on('exit', function () {
-        run(runthis, watchthese);
+        run(runthis, args, watchthese);
     });
     if (!watchthese) {
         var watchthese = [];
     }
-    watchthese.concat([runthis])
-              .forEach(function (file) {
+    watchthese.concat([runthis]).forEach(function (file) {
         fs.watchFile(file, function () {
             sys.puts(runthis+': '+file+' updated! Going to restart...');
             //kills the services so that exit event can restart it. Hopefully.
@@ -39,7 +44,10 @@ function run(runthis, watchthese) {
 
 //Run everything
 if (process.argv[2] === '-sync') {
-    var synchronize = run('synchronize.js');
+    var synchronize = run('./bin/synchronize.js');
 }
-var relay = run('relay.js');
-var services = run('services.js', ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js', ]);
+var relay = run('./bin/relay.js', process.argv.slice(2));
+var services = run('./bin/services.js', [],
+    ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js' ]
+    .map(function (x) { return './plugins/' + x })
+);

@@ -7,7 +7,7 @@ var sys = require('sys');
 
 exports.gitwatch = function (callback) { 
     //What Happens
-    var configfile = './gitwatch.json';
+    var configfile = __dirname + '/gitwatch/gitwatch.json';
     var watchlist = {};
     var listlock = false;
     gwUpdate();
