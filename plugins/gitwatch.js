@@ -21,7 +21,7 @@ function Branches (db) {
                 ,
                 user : where.user,
                 repo : where.repo,
-                name : where.name,
+                name : where.branch,
                 key : key,
             });
             db.save(key, updated, cb);
@@ -52,9 +52,13 @@ function Branches (db) {
         var stream = db.stream();
         stream.on('error', cb);
         stream.on('data', function (branch, cmeta) {
+console.dir(branch);
             github.getBranchCommits(
                 branch.user, branch.repo, branch.name,
-                function (commits) { cb(null, branch, commits) }
+                function (commits) {
+console.dir([].slice.call(arguments));
+                    cb(null, branch, commits);
+                }
             );
         });
     };
