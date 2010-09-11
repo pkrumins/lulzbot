@@ -13,9 +13,12 @@ function Branches (db) {
         var key = Hash(where).values.join('/');
         
         db.get(key, function (err, branch, meta) {
-            var b = branch || {};
+            var b = branch || { channels : [] };
             var updated = Hash.merge(b, {
-                channels : (b.channels || []).concat([ channel ]),
+                channels : b.channels.indexOf(channel) >= 0
+                    ? b.channels
+                    : b.channels.concat([ channel ])
+                ,
                 user : where.user,
                 repo : where.repo,
                 name : where.name,
