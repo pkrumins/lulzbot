@@ -52,13 +52,9 @@ function Branches (db) {
         var stream = db.stream();
         stream.on('error', cb);
         stream.on('data', function (branch, cmeta) {
-console.dir(branch);
             github.getBranchCommits(
                 branch.user, branch.repo, branch.name,
-                function (commits) {
-console.dir([].slice.call(arguments));
-                    cb(null, branch, commits);
-                }
+                function (err, commits) { cb(err, branch, commits) }
             );
         });
     };
