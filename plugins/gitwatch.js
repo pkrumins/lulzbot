@@ -113,6 +113,8 @@ function prepareMessage (branch, commits, cb) {
     
     var more = commits.length - 4;
     if (commits.length > 4) cb('    ... and ' + more + ' more!');
+    cb('Githubs: http://github.com/'+branch.user+'/'+branch.repo
+       +(branch.name === "master" ? "" : "/tree/"+branch.name));
 }
 
 function takeWhile(xs, f) {
