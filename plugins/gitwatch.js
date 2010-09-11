@@ -15,10 +15,9 @@ exports.gitwatch = function (cb) {
         var hacktivity = {};
         branches.getUpdated(function (err, branch, commit) {
             if (err) { console.log('Error: %s', err); return }
-            var key = Hash(branch).valuesAt(['user','repo','name']).join('/');
             
-            if (!hactivity[key]) {
-                hacktivity[key] = { branch : branch, commits : [] };
+            if (!hactivity[branch.key]) {
+                hacktivity[branch.key] = { branch : branch, commits : [] };
             }
             hacktivity[key].commits.push(commit);
         });
@@ -53,16 +52,15 @@ function prepareMessage (repo, cb) {
 }
 
 function Branches (db) {
-    this.watch = function (channel, resource, cb) {
-        var where = Hash.zip(['user','repo','branch'], resource.split('/'));
-        db.get(channel, function (err, ch, meta) {
-            db.save(channel, Hash.tap(ch || {}, function (branches) {
-                branches[where.name] = {
-                    user : where.user,
-                    repo : where.repo,
-                    name : where.name,
-                    lastCommit : undefined,
-                };
+    this.watch = function (channel, key, cb) {
+        var where = Hash.zip(['user','repo','branch'], key.split('/'));
+        db.get(key, function (err, branch, meta) {
+            db.save(key, Hash.merge(branch || {}, {
+                channels : (branch.channels || []).concat([ channel ]),
+                user : where.user,
+                repo : where.repo,
+                name : where.name,
+                key : key,
             }));
         });
     };
@@ -70,18 +68,11 @@ function Branches (db) {
     this.getCommits = function (cb) {
         var stream = db.stream();
         stream.on('error', cb);
-        
-        stream.on('data', function (channel, cmeta) {
-            Hash(channel).forEach(function (branch) {
-                github.getBranchCommits(
-                    branch.user, branch.repo, branch.name,
-                    function (commits) { cb(
-                        null,
-                        Hash.merge(branch, { channel : cmeta.key }),
-                        commits
-                    ) }
-                );
-            });
+        stream.on('data', function (branch, cmeta) {
+            github.getBranchCommits(
+                branch.user, branch.repo, branch.name,
+                function (commits) { cb(null, branch, commits) }
+            );
         });
     };
     
@@ -90,7 +81,7 @@ function Branches (db) {
             if (err) { cb(err, branch); return }
             
             if (branch.lastCommit != commits[0].id) {
-                db.save(branch.name, Hash.merge(branch, {
+                db.save(branch.key, Hash.merge(branch, {
                     lastCommit : commits[0].id
                 }));
                 
