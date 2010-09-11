@@ -29,7 +29,10 @@ function run(runthis, args, watchthese) {
         fs.watchFile(file, function () {
             sys.puts(runthis+': '+file+' updated! Going to restart...');
             //kills the services so that exit event can restart it. Hopefully.
-            running.kill();
+            try { running.kill() }
+            catch (err) {
+                console.log(err.toString());
+            }
             //cleanup
             watchthese.forEach(fs.unwatchFile);
         });

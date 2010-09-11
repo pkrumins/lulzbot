@@ -98,7 +98,7 @@ function Branches (db) {
 function prepareMessage (branch, commits, cb) {
     var greetz = ["Whoa Nelly!", "Zounds!", "Egads!", "Oh snap!", "Aack!"];
     var greet = greetz[ Math.floor(Math.random() * greetz.length) ];
-    var repr = branch.user + '/' + branch.repo + '/ (' + branch.name + ')';
+    var repr = branch.user + '/' + branch.repo + ' (' + branch.name + ')';
     cb(greet + ' ' + commits.length + ' new commits to ' + repr + '!');
     
     commits.slice(0,4).forEach(function (commit) {
