@@ -26,18 +26,11 @@ function say (to, reply) {
 }
 
 //Using dnode to call services
-DNode(function(services) {
-    this.triggers = function () {
-        irc.on('message', function (from, to, message) {
-            services.triggers(message,function(reply) {
-                say(to, reply);
-            });
-        });
-    };
-
-    this.subscriptions = function () {
-        //args: to, reply
-        services.subscriptions(say);
-    };
-
-}).listen(12321);
+DNode({}).listen(12321, function (services) {
+    irc.on('message', function (from, to, message) {
+        var msg = { message : message, from : from, to : to };
+        services.triggers(msg, function (reply) { say(to, reply) });
+    });
+    
+    services.subscriptions(say);
+});

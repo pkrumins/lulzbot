@@ -6,14 +6,16 @@ var sys = require('sys');
 var DNode = require('dnode');
 var getBranch = require('../plugins/branch');
 
-var gitwatch = require('../plugins/gitwatch').gitwatch;
+var gitwatch = require('../plugins/gitwatch');
 var getWeather = require('../plugins/weather').getWeather;
 var spaceship = require('../plugins/onscreen').ship;
 var lns = require('../plugins/lns');
 
 console.log("Starting dnode \"client\" on port 12321.");
-DNode({
-    triggers: function (msg, cb) {
+DNode(function () {
+    this.triggers = function (message, cb) {
+        var msg = message.message;
+        
         if (matched = msg.match(/^!w(x|eather) (.+)$/)) {
             console.log('wx match: '+sys.inspect(matched));
             console.log(matched.length);
@@ -35,13 +37,15 @@ DNode({
             console.log('lns match: '+matched[matched.length-1]);
             lns(matched[matched.length-1],cb);
         }
-    },
-
-    subscriptions: function (cb) {
-        gitwatch(cb);
-    }
-
-}).connect(12321, function (irc) {
-    irc.triggers();
-    irc.subscriptions();
-});
+        if (matched = msg.match(/^!watch\s+(.+)/)) {
+            gitwatch.watch(message.to, matched[1]);
+        }
+        if (matched = msg.match(/^!unwatch\s+(.+)/)) {
+            gitwatch.unwatch(message.to, matched[1]);
+        }
+    };
+    
+    this.subscriptions = function (cb) {
+        gitwatch.listen(cb);
+    };
+}).connect(12321);
