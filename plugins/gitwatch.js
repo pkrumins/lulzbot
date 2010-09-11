@@ -86,7 +86,7 @@ function Branches (db) {
         this.getUpdated(function (err, branch, commit) {
             if (err) { console.log('Error: %s', err); return }
             
-            if (!hactivity[branch.key]) {
+            if (!hacktivity[branch.key]) {
                 hacktivity[branch.key] = { branch : branch, commits : [] };
             }
             hacktivity[key].commits.push(commit);
