@@ -6,7 +6,7 @@
         "type" : "git",
         "url" : "http://github.com/jesusabdullah/lulzbot.git"
     },
-    "author" : "Joshua Holbrook <josh.holbrook@gmail.com> (http://jesusabdullah.github.com)"
+    "author" : "Joshua Holbrook <josh.holbrook@gmail.com> (http://jesusabdullah.github.com)",
     "contributors" : [
         "James Halliday (http://substack.net)"
     ],
