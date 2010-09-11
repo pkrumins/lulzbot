@@ -1,14 +1,13 @@
 # lulzbot
 Lulzbot is an IRC bot that runs on node.js, and lives in #stackvm.
 
-# dependencies
+# installation
 
-* [node.js](http://nodejs.org) (of course)
-* [node-github](http://github.com/ajaxorg/node-github) (in lib/)
-* [node-irc](http://github.com/martynsmith/node-irc) (in lib/)
-* [DNode](http://github.com/substack/dnode) and its dependencies (via npm)
-* [yql](http://github.com/drgath/node-yql) (via npm)
+    git clone http://github.com/jesusabdullah/lulzbot.git
+    cd lulzbot
+    npm install
 
+Prereqs: git, node.js, npm
 
 # commands
 
@@ -16,12 +15,13 @@ Lulzbot is an IRC bot that runs on node.js, and lives in #stackvm.
 * **!source**: lists lulzbot's source's url for the active branch
 * **!onscreen**: prints out some kinda Klingon spaceship
 * **!lns**: Shortens urls using ln-s.net
+* **!watch** *user*/*repo* (*branch*): Watch this github repo. The *branch* argument is optional, and defaults to master.
+* **!unwatch** *user*/*repo* (*branch*): Un-watch a github repo.
 
 # services
 
-* **gitwatch** watches github repos as listed in gitwatch.json.
+* **gitwatch** watches github repos in github.db
 
 # future
 
 * **twitterwatch** to watch twitter for mentions of stackvm
-* **persistence** to save settings between restarts, probably with nStore
