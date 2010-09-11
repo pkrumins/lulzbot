@@ -8,8 +8,11 @@ module.exports = new Branches(nStore(__dirname + '/gitwatch/gitwatch.db'));
 
 function Branches (db) {
     this.watch = function (channel, repo, cb) {
-        var where = Hash.zip(['user','repo','branch'], repo.match(/(\w+)/g));
+        var where = Hash.zip(['user','repo','branch'], repo.match(/([\w\-_]+)/g));
         if (!where.branch) where.branch = 'master';
+
+        console.log("Watching "+where.user+'/'+where.repo+' ('+where.branch+')');
+
         var key = Hash(where).values.join('/');
         
         db.get(key, function (err, branch, meta) {
@@ -29,8 +32,11 @@ function Branches (db) {
     };
     
     this.unwatch = function (channel, repo, cb) {
-        var where = Hash.zip(['user','repo','branch'], repo.match(/(\w+)/g));
+        var where = Hash.zip(['user','repo','branch'], repo.match(/([\w\-_]+)/g));
         if (!where.branch) where.branch = 'master';
+
+        console.log("Unwatching "+where.user+'/'+where.repo+' ('+where.branch+')');
+
         var key = Hash(where).values.join('/');
         
         db.get(key, function (err, branch, meta) {
