@@ -85,7 +85,7 @@ function Branches (db) {
     
     this.listen = function (cb) { 
         var poll = this.poll.bind(this);
-        setTimeout(function () { poll(cb) }, 30000);
+        setInterval(function () { poll(cb) }, 30000);
     };
     
     this.poll = function (cb) {
