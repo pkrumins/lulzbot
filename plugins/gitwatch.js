@@ -1,148 +1,111 @@
 var fs = require('fs');
-var github = new (require('github').GitHubApi)(true);
+var github = new (require('github').GitHubApi)(true).getCommitApi();
 var sys = require('sys');
+var Hash = require('traverse/hash');
 
-//var nStore = require('nStore');
-//var db = nStore('./gitwatch.db');
+var nStore = require('nStore');
+var watchlist = {};
 
-exports.gitwatch = function (callback) { 
-    //What Happens
-    var configfile = __dirname + '/gitwatch/gitwatch.json';
-    var watchlist = {};
-    var listlock = false;
-    gwUpdate();
-    fs.watchFile(configfile, gwUpdate);
-    setInterval(function () {checkCommits(callback);}, 30000);
-
-    function tripleLoop(cb) {
-        listlock = true;
-        for (u in watchlist) { 
-            for (r in watchlist[u].repos) { 
-                for (b in watchlist[u].repos[r].branches) {
-                    cb(u,r,b);
-                }
+exports.gitwatch = function (cb) { 
+    var branches = new Branches(
+        nStore(__dirname + '/gitwatch/gitwatch.db')
+    );
+    
+    setInterval(function () {
+        var hacktivity = {};
+        branches.getUpdated(function (err, branch, commit) {
+            if (err) { console.log('Error: %s', err); return }
+            var key = Hash(branch).valuesAt(['user','repo','name']).join('/');
+            
+            if (!hactivity[key]) {
+                hacktivity[key] = { branch : branch, commits : [] };
             }
-        }
-        listlock = false;
-    }
+            hacktivity[key].commits.push(commit);
+        });
+        
+        Hash(hacktivity).forEach(function (repo) {
+            repo.channels.forEach(function (channel) {
+                prepareMessage(repo, function (msg) {
+                    cb(channel, msg);
+                });
+            });
+        });
+    }, 30000);
+};
 
-    //Call this to update the value of gitwatch
-    function gwUpdate () {
-        var self = this;
-        console.log('Loading '+configfile+"...");
-        fs.readFile(configfile, 'utf-8', function (err,stream) {
-            if (err) {
-                console.log("Reading "+configfile+"broke! This probably means the json is mal-formed.");
-            } else if (listlock) {
-                var wait = 5000;
-                console.log("List is locked! Giving it a try again in " + wait/1000 + " seconds.");
-                setTimeout(self, wait);
-            } else {
-                //locking the list
-                listlock = true;
-                console.log("Parsing json...");
-                watchlist = JSON.parse(stream);
-                console.log("Initializing watchlist...");
-                tripleLoop(function (u,r,b) {
-                    //Reorganize the object first to have a lastCommit and a label field!
-                    watchlist[u].repos[r].branches[b] = {label: watchlist[u].repos[r].branches[b], lastCommit: undefined};
-                    github.getCommitApi().getBranchCommits(watchlist[u].user,
-                                                       watchlist[u].repos[r].label,
-                                                       watchlist[u].repos[r].branches[b].label,
-                                                       function (err,commits) {
-                        if (err) { 
-                            console.log("Watchlist initializing "
-                                       +" on user: "+watchlist[u].user
-                                       +", repo: "+watchlist[u].repos[r].label
-                                       +", branch: "+watchlist[u].repos[r].branches[b].label
-                                       +", messed up like so: "+sys.inspect(err)
-                                       +"; This may be due to a problem in the source json." );
-                        } else {
-                            watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
-                        }
-                    }); //closes api callback
-                }); //closes triple loop
-                console.log("...done.")
-            } //closes listlock check
-        }); //closes readFile
-    }
-
-    //Checks for new commits in each branch
-    function checkCommits(callback) {
-
-        var maxList = 5;
-        var msg = "";
-        var greetz = ["Whoa Nelly!",
-                      "Zounds!",
-                      "Egads!",
-                      "Oh snap!",
-                      "Aack!"];
-
-        if (listlock) {
-            var wait = 5000;
-            console.log("List is locked! Giving it a try again in " + wait/1000 + " seconds.");
-            setTimeout(self, wait);
-        } else {
-            tripleLoop(function (u,r,b) {
-                //Checks for the existence of lastCommit
-                if (watchlist[u].repos[r].branches[b].lastCommit) {
-                    github.getCommitApi().getBranchCommits(watchlist[u].user,
-                                                       watchlist[u].repos[r].label,
-                                                       watchlist[u].repos[r].branches[b].label,
-                                                       function (err,commits) {
-
-                        if (err) {
-                            console.log("Gitwatching checking broke on user: " + watchlist[u].user
-                                      + ", repo: " + watchlist[u].repos[r].label
-                                      + ", branch: " + watchlist[u].repos[r].branches[b].label 
-                                      + ", with the following error: " + sys.inspect(err)
-                                );
-                        } else {
-                            //If there are new commits...
-                            if (commits[0].id !== watchlist[u].repos[r].branches[b].lastCommit) {
-                                //build up list of new commits
-                                var commitsList=[];
-                                i=0;
-                                while (commits[i].id !== watchlist[u].repos[r].branches[b].lastCommit) {
-                                    commitsList = ["    * "+commits[i].author.name+": "+commits[i].message].concat(commitsList);
-                                    i++;
-                                }
-                                if (commitsList.length > maxList) {
-                                    commitsList = commitsList.slice(0,Math.floor(maxList/2))
-                                                            .concat("      ...")
-                                                            .concat(commitsList.slice(commitsList.length-Math.floor(maxList/2),commitsList.length));
-                                }
-
-                                //Launch torpedoes
-                                watchlist[u].repos[r].channels.forEach(
-                                    function (c) {
-                                        callback(c, greetz[Math.floor(Math.random()*greetz.length)]
-                                                  + " New commits to "+watchlist[u].user+"/"
-                                                  + watchlist[u].repos[r].label
-                                                  + " ("+watchlist[u].repos[r].branches[b].label+")!");
-                                        for (n in commitsList) {
-                                            callback(c,commitsList[n]);
-                                        }
-                                        callback(c, "githubs: http://github.com/"
-                                                  + watchlist[u].user+"/"
-                                                  + watchlist[u].repos[r].label+"/tree/"
-                                                  + watchlist[u].repos[r].branches[b].label );
-                                    }
-                                );
-                                        
-                                //We now have a new lastCommit:
-                                watchlist[u].repos[r].branches[b].lastCommit = commits[0].id;
-
-                                //crappy hack thrown in to make sure I don't time out Github
-                                var date = new Date();
-                                var curDate = null;
-                                do {curDate = new Date();} while (curDate-date < 1000);
-                            } //closes "if new commits"
-                        } //closes if/else
-                    }); //closes API call
-                } //closes lastCommit check
-            });//closes triple loop
-        } //closes "unlocked"
-    }
+function prepareMessage (repo, cb) {
+    var greetz = ["Whoa Nelly!", "Zounds!", "Egads!", "Oh snap!", "Aack!"];
+    var greet = greetz[ Math.floor(Math.random() * greetz.length) ];
+    
+    var b = repo.branch;
+    var name = b.user + '/' + b.repo + '/ (' + b.name + ')';
+    
+    var commits = repo.commits;
+    
+    cb(greet + ' ' + commits.length + ' new commits to ' + name + '!');
+    
+    commits.slice(0,4).forEach(function (commit) {
+        cb('    * ' + commit.author.name + ': ' + commit.message);
+    });
+    
+    var more = commits.length - 4;
+    if (commits.length > 4) cb('    ... and ' + more + ' more!');
 }
 
+function Branches (db) {
+    this.watch = function (channel, resource, cb) {
+        var where = Hash.zip(['user','repo','branch'], resource.split('/'));
+        db.get(channel, function (err, ch, meta) {
+            db.save(channel, Hash.tap(ch || {}, function (branches) {
+                branches[where.name] = {
+                    user : where.user,
+                    repo : where.repo,
+                    name : where.name,
+                    lastCommit : undefined,
+                };
+            }));
+        });
+    };
+    
+    this.getCommits = function (cb) {
+        var stream = db.stream();
+        stream.on('error', cb);
+        
+        stream.on('data', function (channel, cmeta) {
+            Hash(channel).forEach(function (branch) {
+                github.getBranchCommits(
+                    branch.user, branch.repo, branch.name,
+                    function (commits) { cb(
+                        null,
+                        Hash.merge(branch, { channel : cmeta.key }),
+                        commits
+                    ) }
+                );
+            });
+        });
+    };
+    
+    this.getUpdated = function (cb) {
+        this.getCommits(function (err, branch, commits) {
+            if (err) { cb(err, branch); return }
+            
+            if (branch.lastCommit != commits[0].id) {
+                db.save(branch.name, Hash.merge(branch, {
+                    lastCommit : commits[0].id
+                }));
+                
+                if (branch.lastCommit) {
+                    cb(null, branch, takeWhile(commits, function (commit) {
+                        return commit.id != branch.lastCommit;
+                    }));
+                }
+            }
+        });
+    };
+}
+
+function takeWhile(xs, f) {
+    var acc = [];
+    for (var i = 0; i < xs.length && f(xs[i]); i++);
+    return xs.slice(0,i);
+}
