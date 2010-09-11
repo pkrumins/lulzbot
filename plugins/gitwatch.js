@@ -78,25 +78,27 @@ function Branches (db) {
     };
     
     this.listen = function (cb) { 
-        setInterval(function () {
-            var hacktivity = {};
-            branches.getUpdated(function (err, branch, commit) {
-                if (err) { console.log('Error: %s', err); return }
-                
-                if (!hactivity[branch.key]) {
-                    hacktivity[branch.key] = { branch : branch, commits : [] };
-                }
-                hacktivity[key].commits.push(commit);
-            });
+        setTimeout(this.poll.bind(this), 30000);
+    };
+    
+    this.poll = function () {
+        var hacktivity = {};
+        this.getUpdated(function (err, branch, commit) {
+            if (err) { console.log('Error: %s', err); return }
             
-            Hash(hacktivity).forEach(function (repo) {
-                repo.channels.forEach(function (channel) {
-                    prepareMessage(repo, function (msg) {
-                        cb(channel, msg);
-                    });
+            if (!hactivity[branch.key]) {
+                hacktivity[branch.key] = { branch : branch, commits : [] };
+            }
+            hacktivity[key].commits.push(commit);
+        });
+        
+        Hash(hacktivity).forEach(function (repo) {
+            repo.channels.forEach(function (channel) {
+                prepareMessage(repo, function (msg) {
+                    cb(channel, msg);
                 });
             });
-        }, 30000);
+        });
     };
 }
 
