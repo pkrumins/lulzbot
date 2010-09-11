@@ -46,6 +46,9 @@ DNode(function () {
     };
     
     this.subscriptions = function (cb) {
-        gitwatch.listen(cb);
+        gitwatch.listen(function (channel, msg) {
+            console.log('git to ' + channel + ': ' + msg);
+            cb(channel, msg)
+        });
     };
 }).connect(12321);
