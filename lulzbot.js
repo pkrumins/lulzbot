@@ -29,7 +29,10 @@ function run(runthis, args, watchthese) {
         fs.watchFile(file, function () {
             sys.puts(runthis+': '+file+' updated! Going to restart...');
             //kills the services so that exit event can restart it. Hopefully.
-            running.kill();
+            try { running.kill() }
+            catch (err) {
+                console.log(err.toString());
+            }
             //cleanup
             watchthese.forEach(fs.unwatchFile);
         });
@@ -44,10 +47,10 @@ function run(runthis, args, watchthese) {
 
 //Run everything
 if (process.argv[2] === '-sync') {
-    var synchronize = run('./bin/synchronize.js');
+    var synchronize = run(__dirname + '/bin/synchronize.js');
 }
-var relay = run('./bin/relay.js', process.argv.slice(2));
-var services = run('./bin/services.js', [],
+var relay = run(__dirname + '/bin/relay.js', process.argv.slice(2));
+var services = run(__dirname + '/bin/services.js', [],
     ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js' ]
     .map(function (x) { return './plugins/' + x })
 );
