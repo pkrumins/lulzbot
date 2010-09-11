@@ -11,7 +11,8 @@
         "optimist" : ">=0.0.1",
         "irc" : ">=0.1.2",
         "yql" : ">=0.2.0",
-        "github" : ">=0.0.1"
+        "github" : ">=0.0.1",
+        "traverse" : ">=0.2.0"
     },
     "engine" : ["node >=0.1.100"],
     "bin" : { "lulzbot" : "./lulzbot.js" }
