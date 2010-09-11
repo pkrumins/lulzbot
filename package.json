@@ -8,7 +8,7 @@
     },
     "author" : "Joshua Holbrook <josh.holbrook@gmail.com> (http://jesusabdullah.github.com)",
     "contributors" : [
-        "James Halliday (http://substack.net)"
+        "James Halliday <mail@substack.net> (http://substack.net)"
     ],
     "dependencies" : {
         "dnode" : ">=0.1.0",
