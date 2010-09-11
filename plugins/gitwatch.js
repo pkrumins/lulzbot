@@ -89,7 +89,7 @@ function Branches (db) {
             if (!hacktivity[branch.key]) {
                 hacktivity[branch.key] = { branch : branch, commits : [] };
             }
-            hacktivity[key].commits.push(commit);
+            hacktivity[branch.key].commits.push(commit);
         });
         
         Hash(hacktivity).forEach(function (repo) {
