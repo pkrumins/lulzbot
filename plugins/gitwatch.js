@@ -78,23 +78,16 @@ function Branches (db) {
     };
     
     this.listen = function (cb) { 
-        setTimeout(this.poll.bind(this), 30000);
+        var poll = this.poll.bind(this);
+        setTimeout(function () { poll(cb) }, 30000);
     };
     
-    this.poll = function () {
-        var hacktivity = {};
-        this.getUpdated(function (err, branch, commit) {
+    this.poll = function (cb) {
+        this.getUpdated(function (err, branch, commits) {
             if (err) { console.log('Error: %s', err); return }
             
-            if (!hacktivity[branch.key]) {
-                hacktivity[branch.key] = { branch : branch, commits : [] };
-            }
-            hacktivity[branch.key].commits.push(commit);
-        });
-        
-        Hash(hacktivity).forEach(function (repo) {
-            repo.channels.forEach(function (channel) {
-                prepareMessage(repo, function (msg) {
+            branch.channels.forEach(function (channel) {
+                prepareMessage(branch, commits, function (msg) {
                     cb(channel, msg);
                 });
             });
@@ -102,16 +95,11 @@ function Branches (db) {
     };
 }
 
-function prepareMessage (repo, cb) {
+function prepareMessage (branch, commits, cb) {
     var greetz = ["Whoa Nelly!", "Zounds!", "Egads!", "Oh snap!", "Aack!"];
     var greet = greetz[ Math.floor(Math.random() * greetz.length) ];
-    
-    var b = repo.branch;
-    var name = b.user + '/' + b.repo + '/ (' + b.name + ')';
-    
-    var commits = repo.commits;
-    
-    cb(greet + ' ' + commits.length + ' new commits to ' + name + '!');
+    var repr = branch.user + '/' + branch.repo + '/ (' + branch.name + ')';
+    cb(greet + ' ' + commits.length + ' new commits to ' + repr + '!');
     
     commits.slice(0,4).forEach(function (commit) {
         cb('    * ' + commit.author.name + ': ' + commit.message);
