@@ -6,13 +6,18 @@
         "type" : "git",
         "url" : "http://github.com/jesusabdullah/lulzbot.git"
     },
+    "author" : "Joshua Holbrook <josh.holbrook@gmail.com> (http://jesusabdullah.github.com)"
+    "contributors" : [
+        "James Halliday (http://substack.net)"
+    ],
     "dependencies" : {
         "dnode" : ">=0.1.0",
         "optimist" : ">=0.0.1",
         "irc" : ">=0.1.2",
         "yql" : ">=0.2.0",
         "github" : ">=0.0.1",
-        "traverse" : ">=0.2.0"
+        "traverse" : ">=0.2.0",
+        "nStore" : ">=0.2.0"
     },
     "engine" : ["node >=0.1.100"],
     "bin" : { "lulzbot" : "./lulzbot.js" }
