@@ -4,6 +4,7 @@ var sys = require('sys');
 var Hash = require('traverse/hash');
 
 var nStore = require('nStore');
+
 module.exports = new Branches(nStore(__dirname + '/gitwatch/gitwatch.db'));
 
 function Branches (db) {
