@@ -36,6 +36,6 @@ module.exports = function(user, pass, cb) {
 }
 
 function handleTweet(tweet, cb) {
-    cb('#stackvm', '\'\'< ♪: '+tweet.text+' -- '+tweet.screen_name+' ('+tweet.name+') \'\'< ♪');
-    cb('#stackvm', 'Czech it out @ http://twitter.com/'+tweet.screen_name+'/status/'+tweet.id);
+    cb('#stackvm', '\'\'< ♪: '+tweet.text+' -- '+tweet.user.screen_name+' ('+tweet.user.name+') \'\'< ♪');
+    cb('#stackvm', 'Czech it out @ http://twitter.com/'+tweet.user.screen_name+'/status/'+tweet.id);
 }
