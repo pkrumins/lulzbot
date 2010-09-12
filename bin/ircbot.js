@@ -1,26 +1,26 @@
+#!/usr/bin/env node
+
 //Maushu's __announcer
 
 var sys = require('sys'),
 	http = require('http'),
 	querystring = require('querystring'),
-	base64 = require('./lib/base64'),
+	base64 = require('base64'),
 	Buffer = require('buffer').Buffer,
-	Irc = require('./vendor/IRC/lib/irc');
+	Irc = require('irc');
 
-var twitter_auth = { user: "<TWITTER_USERNAME>", pass: "<TWITTER_PASSWORD>"};
+var argv = require('optimist')
+               .demand(['username', 'pass', 'server', 'nick', 'channel'])
+               .argv;
 
-var google_api_key = "<GOOGLE_API_KEY>";
+var twitter_auth = { user: argv.username, pass: argv.pass };
+
+var google_api_key = argv.googleapi;
 	
 var irc_options = 
-	{ server: '<IRC_SERVER>'
-	, nick: '<IRC_NICK>'
-	, channel: '<IRC_CHANNEL>'
-	, user:
-		{ username: 'announcer'
-		, hostname: 'intertubes'
-		, servername: 'graphnode'
-		, realname: 'Node.js Announcer'
-		}
+	{ channels: [argv.channel]
+	, username: 'an-verb-cer'
+    , realname: 'Node.js Announcer'
 	};
 
 //Twitter
@@ -30,12 +30,8 @@ process.addListener('uncaughtException', function (err) {
   sys.puts('Caught exception: ' + err);
 });
 
-var bot = new Irc(irc_options || {});
+var bot = new Irc.Client(argv.server, argv.nick, irc_options);
 
-// Connect the irc bot.
-bot.connect(function() {
-	this.join(bot.options.channel);
-});
 
 // Messages received from the channel.
 bot.addListener('privmsg', function(message) {
@@ -62,7 +58,7 @@ function checkTweets() {
 	//Note use of querystring.stringify.
 	var query = querystring.stringify({ track: 'nodejs,node js' });
     //Note: uses basic auth, should convert to oauth
-	var headers = { 'Host': 'stream.twitter.com', 'Authorization': 'Basic ' + base64.encode(twitter_auth.user + ':' + twitter_auth.pass) };
+	var headers = { 'Host': 'stream.twitter.com', 'Authorization': 'Basic ' + base64.encode(new Buffer(twitter_auth.user + ':' + twitter_auth.pass)) };
     //Note: Uses streaming api
 	var client = http.createClient(80, 'stream.twitter.com');
 	client.setTimeout(1000 * 60 * 5);
