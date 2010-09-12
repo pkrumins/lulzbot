@@ -17,8 +17,6 @@ DNode(function () {
         var msg = message.message;
         
         if (matched = msg.match(/^!w(x|eather) (.+)$/)) {
-            console.log('wx match: '+sys.inspect(matched));
-            console.log(matched.length);
             getWeather(matched[matched.length-1],cb);
         }
         if (matched = msg.match("!onscreen")) {
