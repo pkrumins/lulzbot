@@ -5,6 +5,10 @@
 var sys = require('sys');
 var DNode = require('dnode');
 var getBranch = require('../plugins/branch');
+var argv = require('optimist')
+    .demand([ 'user', 'pass' ])
+    .argv;
+
 
 var gitwatch = require('../plugins/gitwatch');
 var getWeather = require('../plugins/weather').getWeather;
@@ -45,5 +49,6 @@ DNode(function () {
     
     this.subscriptions = function (cb) {
         gitwatch.listen(cb);
+        twitter(argv.user, argv.pass, cb);
     };
 }).connect(12321);
