@@ -15,7 +15,7 @@ module.exports = function(user, pass, cb) {
             try {
                 handleTweet(JSON.parse(jsons));
             } catch(e) {
-                sys.debug('\nProblem parsing: ' + tweet);
+                sys.debug('\nProblem parsing: ' + jsons);
                 sys.debug(e.message);
                 sys.debug(e.stack);
             }
@@ -32,10 +32,11 @@ module.exports = function(user, pass, cb) {
     });
 
     stream.start();
-}
 
-function handleTweet(tweet) {
-    cb('\'\'< ♪: '+tweet.text+' -- '+tweet.screen_name+' ('+tweet.name+') \'\'< ♪');
-    cb('Czech it out @ http://twitter.com/'+tweet.screen_name+'/status/'+tweet.id);
+    function handleTweet(tweet, cb) {
+        cb('\'\'< ♪: '+tweet.text+' -- '+tweet.screen_name+' ('+tweet.name+') \'\'< ♪');
+        cb('Czech it out @ http://twitter.com/'+tweet.screen_name+'/status/'+tweet.id);
+
+}
 
 }
