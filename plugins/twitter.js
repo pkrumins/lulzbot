@@ -1,24 +1,19 @@
 var TwitterStream = require('evented-twitter').TwitterStream;
 var sys = require('sys');
-var argv = require('optimist').argv;
 
-module.exports = function(argv.user, argv.pass) {
+module.exports = function(user, pass) {
 
+    var twitStream = new TwitterStream(user, pass);
 
-    var twitter = new TwitterStream(username, pass);
+    //Should make tracking available like gitwatch
+    var stream = twitstream.filter('json', {track: 'stackvm'});
 
-    var params = {'track':'Beck'};
-
-    // statuses/sample from streaming api
-    var stream = twitter.filter('json', params);
-
-    stream.addListener('ready', function() {
-        stream.addListener('tweet', function(tweet) {
-            if(!String(tweet).trim()) return;
+    stream.on('ready', function() {
+        stream.on('tweet', function(jsons) {
+            //Checks for blank returns from twitter
+            if(!String(jsons).trim()) return;
             try {
-                // The result is not parsed for you
-                var t = JSON.parse(tweet);
-                sys.puts(sys.inspect(t));
+                handleTweet(JSON.parse(jsons);
             } catch(e) {
                 sys.debug('\nProblem parsing: ' + tweet);
                 sys.debug(e.message);
@@ -26,15 +21,22 @@ module.exports = function(argv.user, argv.pass) {
             }
         });
 
-        stream.addListener('complete', function(response) {
+        stream.on('complete', function(response) {
             stream.close();
         });
     });
 
-    stream.addListener('error', function(err) {
+    stream.on('error', function(err) {
         sys.debug(err.message);
         throw err;
     });
 
     stream.start();
+}
+
+function handleTweet(tweet) {
+    console.log('TWEET: '+tweet.text);
+    console.log('location: '+tweet.user.location);
+    console.log('tweet-id: '+tweet.id);
+
 }
