@@ -5,11 +5,16 @@
 var sys = require('sys');
 var DNode = require('dnode');
 var getBranch = require('../plugins/branch');
+var argv = require('optimist')
+    .demand([ 'user', 'pass' ])
+    .argv;
+
 
 var gitwatch = require('../plugins/gitwatch');
 var getWeather = require('../plugins/weather').getWeather;
 var spaceship = require('../plugins/onscreen').ship;
 var lns = require('../plugins/lns');
+var twitter = require('../plugins/twitter');
 
 console.log("Starting dnode \"client\" on port 12321.");
 DNode(function () {
@@ -17,8 +22,6 @@ DNode(function () {
         var msg = message.message;
         
         if (matched = msg.match(/^!w(x|eather) (.+)$/)) {
-            console.log('wx match: '+sys.inspect(matched));
-            console.log(matched.length);
             getWeather(matched[matched.length-1],cb);
         }
         if (matched = msg.match("!onscreen")) {
@@ -28,6 +31,9 @@ DNode(function () {
             getBranch(function (branch) {
                 cb("http://github.com/jesusabdullah/lulzbot/tree/"+branch+"/");
             });
+        }
+        if (matched = msg.match("!gitlist")) {
+            gitwatch.list(message.to,cb);
         }
         if (matched = msg.match("!help")) {
             cb("http://github.com/jesusabdullah/lulzbot/blob/master/README.md");
@@ -47,5 +53,6 @@ DNode(function () {
     
     this.subscriptions = function (cb) {
         gitwatch.listen(cb);
+        twitter(argv.user, argv.pass, cb);
     };
 }).connect(12321);

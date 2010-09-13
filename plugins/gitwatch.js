@@ -4,6 +4,7 @@ var sys = require('sys');
 var Hash = require('traverse/hash');
 
 var nStore = require('nStore');
+
 module.exports = new Branches(nStore(__dirname + '/gitwatch/gitwatch.db'));
 
 function Branches (db) {
@@ -82,6 +83,29 @@ function Branches (db) {
             }
         });
     };
+
+    //List all repos
+    this.list = function (channel, cb) {
+        db.all( function (docs, m) {
+            found = false;
+            docs.channels.forEach( function(c) {
+                if (c === channel) {
+                    found = true;
+                }
+            });
+            return found;
+        }
+        , function (e, x, m) {
+            if (e) {
+                console.log(e);
+            } else {
+                (x.sort())forEach( function(y) {
+                    cb(y.key);
+                });
+            }
+        });
+
+    }
     
     this.listen = function (cb) { 
         var poll = this.poll.bind(this);

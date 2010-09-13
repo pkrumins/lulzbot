@@ -10,7 +10,7 @@ require('optimist')
     .usage('Usage: $0 OPTIONS\n'
         + '    Required OPTIONS: --server --nick\n'
         + '    Other OPTIONS: --username --realname --channel')
-    .demand([ 'server', 'nick' ]);
+    .demand([ 'server', 'nick', 'user', 'pass' ]);
 
 var fs = require('fs');
 var spawn = require('child_process').spawn;
@@ -50,7 +50,7 @@ if (process.argv[2] === '-sync') {
     var synchronize = run(__dirname + '/bin/synchronize.js');
 }
 var relay = run(__dirname + '/bin/relay.js', process.argv.slice(2));
-var services = run(__dirname + '/bin/services.js', [],
-    ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js' ]
+var services = run(__dirname + '/bin/services.js', process.argv.slice(2),
+    ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js', 'twitter.js' ]
     .map(function (x) { return './plugins/' + x })
 );
