@@ -83,6 +83,29 @@ function Branches (db) {
             }
         });
     };
+
+    //List all repos
+    this.list = function (channel, cb) {
+        db.all( function (docs, m) {
+            found = false;
+            docs.channels.forEach( function(c) {
+                if (c === channel) {
+                    found = true;
+                }
+            });
+            return found;
+        }
+        , function (e, x, m) {
+            if (e) {
+                console.log(e);
+            } else {
+                x.forEach( function(y) {
+                    cb(y.key);
+                });
+            }
+        });
+
+    }
     
     this.listen = function (cb) { 
         var poll = this.poll.bind(this);

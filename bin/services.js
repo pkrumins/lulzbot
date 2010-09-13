@@ -32,6 +32,9 @@ DNode(function () {
                 cb("http://github.com/jesusabdullah/lulzbot/tree/"+branch+"/");
             });
         }
+        if (matched = msg.match("!gitlist")) {
+            gitwatch.list(message.to,cb);
+        }
         if (matched = msg.match("!help")) {
             cb("http://github.com/jesusabdullah/lulzbot/blob/master/README.md");
             cb("Warning: May be outta date.");
