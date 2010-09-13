@@ -1,6 +1,6 @@
 {
     "name" : "lulzbot",
-    "version" : "0.0.1",
+    "version" : "0.0.2",
     "description" : "IRC bot that can watch github",
     "repository" : {
         "type" : "git",
@@ -17,7 +17,7 @@
         "yql" : ">=0.2.0",
         "github" : ">=0.0.1",
         "traverse" : ">=0.2.0",
-        "nStore" : ">=0.2.0"
+        "supermarket" : ">=0.0.1"
     },
     "engine" : ["node >=0.1.100"],
     "bin" : { "lulzbot" : "./lulzbot.js" }

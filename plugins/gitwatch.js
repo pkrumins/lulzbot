@@ -3,7 +3,7 @@ var github = new (require('github').GitHubApi)(true).getCommitApi();
 var sys = require('sys');
 var Hash = require('traverse/hash');
 
-var nStore = require('nStore');
+var nStore = require('supermarket');
 
 module.exports = new Branches(nStore(__dirname + '/gitwatch/gitwatch.db'));
 
