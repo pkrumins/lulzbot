@@ -99,7 +99,7 @@ function Branches (db) {
             if (e) {
                 console.log(e);
             } else {
-                x.forEach( function(y) {
+                (x.sort())forEach( function(y) {
                     cb(y.key);
                 });
             }
