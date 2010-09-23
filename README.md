@@ -29,16 +29,14 @@ The username and password part are for twitter services. Feel free to remove tha
 * **!source**: lists lulzbot's source's url for the active branch
 * **!onscreen**: prints out some kinda Klingon spaceship
 * **!lns**: Shortens urls using ln-s.net
+* **!furryurl**: Shortens urls using furryurl.com
 * **!watch** *user*/*repo* (*branch*): Watch this github repo. The *branch* argument is optional, and defaults to master.
 * **!unwatch** *user*/*repo* (*branch*): Un-watch a github repo.
 
 # services
 
 * **gitwatch** watches github repos in github.db
-
-# future
-
-* **twitterwatch** to watch twitter for mentions of stackvm
+* **twitterwatch** watches twitter for mentions of stackvm
 
 # author(s)
 
