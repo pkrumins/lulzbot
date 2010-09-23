@@ -45,7 +45,7 @@ DNode(function () {
             lns(matched[matched.length-1],cb);
         }
         if (matched = msg.match(/^!furryurl (.+)$/)) {
-            console.log('lns match: '+matched[matched.length-1]);
+            console.log('furryurl match: '+matched[matched.length-1]);
             furryurl(matched[matched.length-1],cb);
         }
         if (matched = msg.match(/^!watch\s+(.+)/)) {
