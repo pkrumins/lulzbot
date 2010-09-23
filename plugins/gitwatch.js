@@ -101,7 +101,7 @@ function Branches () {
     
     this.listen = function (cb) { 
         var poll = this.poll.bind(this);
-        setInterval(function () { poll(cb) }, 1000);
+        setInterval(function () { poll(cb) }, 30000);
     };
     
     this.poll = function (cb) {
