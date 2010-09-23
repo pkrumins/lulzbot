@@ -2,21 +2,20 @@ var fs = require('fs');
 var github = new (require('github').GitHubApi)(true).getCommitApi();
 var sys = require('sys');
 var Hash = require('traverse/hash');
-
 var Store = require('supermarket');
 
-module.exports = new Branches(__dirname + '/gitwatch/gitwatch.db');
+Store({ filename: __dirname + '/gitwatch/gitwatch.db' , json: true}, function (err, db) {
+    module.exports = new Branches();
+    function Branches() {
+        this.watch = function (channel, repo, cb) {
+            var where = Hash.zip(['user','repo','branch'], repo.match(/([\w\-_]+)/g));
+            if (!where.branch) where.branch = 'master';
 
-function Branches (dbfile) {
-    this.watch = function (channel, repo, cb) {
-        var where = Hash.zip(['user','repo','branch'], repo.match(/([\w\-_]+)/g));
-        if (!where.branch) where.branch = 'master';
+            console.log("Watching "+where.user+'/'+where.repo+' ('+where.branch+')');
 
-        console.log("Watching "+where.user+'/'+where.repo+' ('+where.branch+')');
+            var key = Hash(where).values.join('/');
 
-        var key = Hash(where).values.join('/');
 
-        Store({ filename: dbfile, json: true}, function (err, db) {
             db.get(key, function (err, branch, meta) {
                 var b = branch || { channels : [] };
                 var updated = Hash.merge(b, {
@@ -29,20 +28,18 @@ function Branches (dbfile) {
                     name : where.branch,
                     key : key,
                 });
-                db.set(key, updated, function(err,x) { cb(x);});
+                db.set(key, updated);
             });
-        });
-    };
-    
-    this.unwatch = function (channel, repo, cb) {
-        var where = Hash.zip(['user','repo','branch'], repo.match(/([\w\-_]+)/g));
-        if (!where.branch) where.branch = 'master';
+        };
+        
+        this.unwatch = function (channel, repo, cb) {
+            var where = Hash.zip(['user','repo','branch'], repo.match(/([\w\-_]+)/g));
+            if (!where.branch) where.branch = 'master';
 
-        console.log("Unwatching "+where.user+'/'+where.repo+' ('+where.branch+')');
+            console.log("Unwatching "+where.user+'/'+where.repo+' ('+where.branch+')');
 
-        var key = Hash(where).values.join('/');
+            var key = Hash(where).values.join('/');
 
-        Store({ filename: dbfile, json: true}, function (err, db) {
             db.get(key, function (err, branch, meta) {
                 if (err) { if (cb) cb(err); return }
                 
@@ -56,43 +53,39 @@ function Branches (dbfile) {
                     db.remove(key, cb);
                 }
             });
-        });
-    };
-    
-    this.getCommits = function (cb) {
-        Store({ filename: dbfile, json: true}, function (err, db) {
+        };
+        
+        this.getCommits = function (cb) {
             db.forEach(function( err, branch, cmeta) {
                 github.getBranchCommits(
                     branch.user, branch.repo, branch.name,
                     function (err, commits) { cb(err, branch, commits) }
                 );
             });
-        });
-    };
-    
-    this.getUpdated = function (cb) {
-        this.getCommits(function (err, branch, commits) {
-            if (err) { cb(err, branch); return }
-            
-            if (branch.lastCommit != commits[0].id) {
-                Store({ filename: dbfile, json: true}, function (err, db) {
-                    db.set(branch.key, Hash.merge(branch, {
-                        lastCommit : commits[0].id
-                    })); 
-                });
+        };
+        
+        this.getUpdated = function (cb) {
+            this.getCommits(function (err, branch, commits) {
+                if (err) { cb(err, branch); return }
                 
-                if (branch.lastCommit) {
-                    cb(null, branch, takeWhile(commits, function (commit) {
-                        return commit.id != branch.lastCommit;
-                    }));
+                if (branch.lastCommit != commits[0].id) {
+                    Store({ filename: dbfile, json: true}, function (err, db) {
+                        db.set(branch.key, Hash.merge(branch, {
+                            lastCommit : commits[0].id
+                        })); 
+                    });
+                    
+                    if (branch.lastCommit) {
+                        cb(null, branch, takeWhile(commits, function (commit) {
+                            return commit.id != branch.lastCommit;
+                        }));
+                    }
                 }
-            }
-        });
-    };
+            });
+        };
 
-    //List all repos
-    this.list = function (channel, cb) {
-        Store({ filename: dbfile, json: true}, function (err, db) {
+        //List all repos
+        this.list = function (channel, cb) {
             db.filter( function (docs, m) {
                 found = false;
                 docs.channels.forEach( function(c) {
@@ -111,26 +104,26 @@ function Branches (dbfile) {
                     });
                 }
             });
-        });
-    }
-    
-    this.listen = function (cb) { 
-        var poll = this.poll.bind(this);
-        setInterval(function () { poll(cb) }, 30000);
-    };
-    
-    this.poll = function (cb) {
-        this.getUpdated(function (err, branch, commits) {
-            if (err) { console.log('Error: %s', err); return }
-            
-            branch.channels.forEach(function (channel) {
-                prepareMessage(branch, commits, function (msg) {
-                    cb(channel, msg);
+        }
+        
+        this.listen = function (cb) { 
+            var poll = this.poll.bind(this);
+            setInterval(function () { poll(cb) }, 30000);
+        };
+        
+        this.poll = function (cb) {
+            this.getUpdated(function (err, branch, commits) {
+                if (err) { console.log('Error: %s', err); return }
+                
+                branch.channels.forEach(function (channel) {
+                    prepareMessage(branch, commits, function (msg) {
+                        cb(channel, msg);
+                    });
                 });
             });
-        });
+        };
     };
-}
+});
 
 function prepareMessage (branch, commits, cb) {
     var greetz = ["Whoa Nelly!", "Zounds!", "Egads!", "Oh snap!", "Aack!", "Great balls of fire!"];
