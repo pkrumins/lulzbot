@@ -15,7 +15,6 @@ var getWeather = require('../plugins/weather').getWeather;
 var spaceship = require('../plugins/onscreen').ship;
 var lns = require('../plugins/lns');
 var furryurl = require('../plugins/furryurl');
-var twitter = require('../plugins/twitter');
 
 console.log("Starting dnode \"client\" on port 12321.");
 DNode(function () {
@@ -58,6 +57,6 @@ DNode(function () {
     
     this.subscriptions = function (cb) {
         gitwatch.listen(cb);
-        twitter(argv.user, argv.pass, cb);
+        //twitter(argv.user, argv.pass, cb);
     };
 }).connect(12321);

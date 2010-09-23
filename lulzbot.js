@@ -51,6 +51,6 @@ if (process.argv[2] === '-sync') {
 }
 var relay = run(__dirname + '/bin/relay.js', process.argv.slice(2));
 var services = run(__dirname + '/bin/services.js', process.argv.slice(2),
-    ['branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js', 'twitter.js' ]
+    [ 'branch.js', 'gitwatch.js', 'lns.js', 'onscreen.js' ]
     .map(function (x) { return './plugins/' + x })
 );
