@@ -14,6 +14,7 @@ var gitwatch = require('../plugins/gitwatch');
 var getWeather = require('../plugins/weather').getWeather;
 var spaceship = require('../plugins/onscreen').ship;
 var lns = require('../plugins/lns');
+var furryurl = require('../plugins/furryurl');
 var twitter = require('../plugins/twitter');
 
 console.log("Starting dnode \"client\" on port 12321.");
@@ -42,6 +43,10 @@ DNode(function () {
         if (matched = msg.match(/^!lns (.+)$/)) {
             console.log('lns match: '+matched[matched.length-1]);
             lns(matched[matched.length-1],cb);
+        }
+        if (matched = msg.match(/^!furryurl (.+)$/)) {
+            console.log('furryurl match: '+matched[matched.length-1]);
+            furryurl(matched[matched.length-1],cb);
         }
         if (matched = msg.match(/^!watch\s+(.+)/)) {
             gitwatch.watch(message.to, matched[1]);
