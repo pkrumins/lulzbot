@@ -76,7 +76,7 @@ function Branches () {
                 
                 if (meta.lastCommit) {
                     cb(null, branch, meta, takeWhile(commits, function (commit) {
-                        return commit.id != branch.lastCommit;
+                        return commit.id != meta.lastCommit;
                     }));
                 }
             }
@@ -109,7 +109,7 @@ function Branches () {
             if (err) { console.log(err); return }
             
             meta.channels.forEach(function (channel) {
-                prepareMessage(branch, commits, function (msg) {
+                prepareMessage(branch, meta, commits, function (msg) {
                     cb(channel, msg);
                 });
             });
@@ -117,10 +117,10 @@ function Branches () {
     };
 }
 
-function prepareMessage (branch, commits, cb) {
+function prepareMessage (branch, meta, commits, cb) {
     var greetz = ["Whoa Nelly!", "Zounds!", "Egads!", "Oh snap!", "Aack!", "Great balls of fire!"];
-    var greet = greetz[ Math.floor(Math.random() * greetz.length) ];
-    var repr = branch.user + '/' + branch.repo + ' (' + branch.name + ')';
+    var greet = randomPick(greetz);
+    var repr = meta.user + '/' + meta.repo + ' (' + meta.name + ')';
     cb(greet + ' ' + commits.length + ' new commits to ' + repr + '!');
     
     commits.slice(0,4).forEach(function (commit) {
@@ -138,3 +138,8 @@ function takeWhile(xs, f) {
     for (var i = 0; i < xs.length && f(xs[i]); i++);
     return xs.slice(0,i);
 }
+
+function randomPick(xs) {
+    return xs[Math.floor(Math.random() * xs.length)];
+}
+
