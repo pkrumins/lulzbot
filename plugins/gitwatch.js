@@ -100,7 +100,7 @@ function Branches () {
             function () { // done function
                 repos.sort().forEach(function (repo) {
                     cb(repo);
-                }
+                });
             }
         );
     }
