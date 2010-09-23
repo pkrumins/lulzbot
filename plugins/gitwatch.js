@@ -85,6 +85,7 @@ function Branches () {
 
     //List all repos
     this.list = function (channel, cb) {
+        var repos = [];
         db.filter(
             function (repo, meta) {
                 return meta.channels.some(function (c) { return c === channel })
@@ -93,6 +94,11 @@ function Branches () {
                 if (err) {
                     console.log(err);
                 } else {
+                    repos.push(repo);
+                }
+            },
+            function () { // done function
+                repos.sort().forEach(function (repo) {
                     cb(repo);
                 }
             }
