@@ -26,7 +26,8 @@ exports.getWeather = function getWeather (location, callback) {
                             "Mostly Clear": " ☁ ",
                             "Snow": "❄" };
 
-                return (lut[text]==null ? text : lut[text]+"("+text+")");
+                //return (lut[text]==null ? text : lut[text]+"("+text+")");
+                return text;
             }
 
             //Some locations have a blank region, so we use the country instead.
