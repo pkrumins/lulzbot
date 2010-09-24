@@ -5,10 +5,10 @@
 var sys = require('sys');
 var DNode = require('dnode');
 var getBranch = require('../plugins/branch');
-var argv = require('optimist')
+/*var argv = require('optimist')
     .demand([ 'user', 'pass' ])
     .argv;
-
+*/
 
 var gitwatch = require('../plugins/gitwatch');
 var getWeather = require('../plugins/weather').getWeather;
