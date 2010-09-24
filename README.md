@@ -3,10 +3,10 @@ Lulzbot is an IRC bot that runs on node.js, and lives in #stackvm. It's in a sta
 
 # TODO:
 (Feel free to do these for me!)
-* **Fix databasery in gitwatch.js.** Substack used nStore, but corruption issues have me trying to port it to Supermarket. It almost works now.
-* **Add databasery to twitter.js.** Twitter.js now only watches for things hard-coded into it. Adding !watch-like commands is desirable.
-* **Figure out where the Hell the twitter import spam is coming from.** My suspicions are that it is in evented-twitter itself.
-* **Figure out wth is going on with weather.js.** For some reason, lulzbot does not return the entire weather message. This used to work.
+* **Fix databasery in gitwatch.js.** Substack used nStore, but corruption issues have me trying to port it to Supermarket. It almost works now.  
+* **Add databasery to twitter.js.** Twitter.js now only watches for things hard-coded into it. Adding !watch-like commands is desirable.  
+* **Figure out where the Hell the twitter import spam is coming from.** My suspicions are that it is in evented-twitter itself.  
+* **Figure out wth is going on with weather.js.** For some reason, lulzbot does not return the entire weather message. This used to work.  
 * **Make lulzbot easier to start.** Ideally it would be one command, not two. There is a program that *should* run and manage both "sides" of lulzbot, but it's pretty buggy. I may remove the dnode dependency someday, which was introduced to allow hotloading and better bot uptimes.
 
 # Prereqs: 
@@ -30,7 +30,7 @@ The username and password part are for twitter services. Feel free to remove tha
 * **!onscreen**: prints out some kinda Klingon spaceship
 * **!lns**: Shortens urls using ln-s.net
 * **!furryurl**: Shortens urls using furryurl.com
-* **!watch** *user*/*repo* (*branch*): Watch this github repo. The *branch* argument is optional, and defaults to master.
+* **!watch** *user*/*repo* (*branch*): Watch this github repo. The *branch* argument is optional, and defaults to master.  
 * **!unwatch** *user*/*repo* (*branch*): Un-watch a github repo.
 
 # services
