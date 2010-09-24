@@ -15,7 +15,7 @@ var IRC = require('irc');
 var irc = new IRC.Client(argv.server, argv.nick, {
     userName : argv.username || argv.nick,
     realName : argv.realname || 'LulzBot the node.js IRC bot!',
-    debug: false,
+    debug: true,
     channels: Array.isArray(argv.channel) ? argv.channel : [argv.channel],
     retryCount: 5,
 });
