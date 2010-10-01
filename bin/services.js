@@ -4,17 +4,28 @@
 
 var sys = require('sys');
 var DNode = require('dnode');
-var getBranch = require('../plugins/branch');
-/*var argv = require('optimist')
-    .demand([ 'user', 'pass' ])
+var argv = require('optimist')
+    .usage('Usage: $0 OPTIONS\n'
+         + '    --twitter : Enables twitter-watching. Requires twitter account.')
     .argv;
-*/
 
+var getBranch = require('../plugins/branch');
 var gitwatch = require('../plugins/gitwatch');
 var getWeather = require('../plugins/weather').getWeather;
 var spaceship = require('../plugins/onscreen').ship;
 var lns = require('../plugins/lns');
 var furryurl = require('../plugins/furryurl');
+
+if (argv.twitter) {
+    try {
+        var twitter = require('../plugins/twitter');
+        var Prompt = require('prompt');
+    } catch (e) {
+        console.log('Error trying to set up twitter: ' + e);
+        argv.twitter = false;
+    }
+    
+}
 
 console.log("Starting dnode \"client\" on port 12321.");
 DNode(function () {
@@ -37,7 +48,7 @@ DNode(function () {
         }
         if (matched = msg.match("!help")) {
             cb("http://github.com/jesusabdullah/lulzbot/blob/master/README.md");
-            cb("Warning: May be outta date.");
+            cb("Warning: Probably outta date.");
         }
         if (matched = msg.match(/^!lns (.+)$/)) {
             console.log('lns match: '+matched[matched.length-1]);
@@ -57,6 +68,14 @@ DNode(function () {
     
     this.subscriptions = function (cb) {
         gitwatch.listen(cb);
-        //twitter(argv.user, argv.pass, cb);
+        if (argv.twitter) {
+            Prompt()
+                .ask('Twitter username: ', 'user')
+                .ask('Twitter pass: ', 'pass')
+                .tap(function (ans) {
+                    twitter(ans.user+'', ans.pass+'', cb);
+                })
+                .end();
+        }
     };
 }).connect(12321);
