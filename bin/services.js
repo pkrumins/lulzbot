@@ -15,6 +15,7 @@ var getWeather = require('../plugins/weather').getWeather;
 var spaceship = require('../plugins/onscreen').ship;
 var lns = require('../plugins/lns');
 var furryurl = require('../plugins/furryurl');
+var justme = require('../plugins/justme');
 
 if (argv.twitter) {
     try {
@@ -57,6 +58,10 @@ DNode(function () {
         if (matched = msg.match(/^!furryurl (.+)$/)) {
             console.log('furryurl match: '+matched[matched.length-1]);
             furryurl(matched[matched.length-1],cb);
+        }
+        if (matched = msg.match(/^!justme (.+)$/)) {
+            console.log('justme match: '+matched[matched.length-1]);
+            justme(matched[matched.length-1],cb);
         }
         if (matched = msg.match(/^!watch\s+(.+)/)) {
             gitwatch.watch(message.to, matched[1]);
