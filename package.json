@@ -20,5 +20,4 @@
         "supermarket" : ">=0.0.1"
     },
     "engine" : ["node >=0.1.100"],
-    "bin" : { "lulzbot" : "./lulzbot.js" }
 }
