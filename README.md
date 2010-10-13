@@ -16,11 +16,7 @@ git, node.js. Has an npm file, but that's pretty jacked up atm. I'll fix it as l
     git clone http://github.com/jesusabdullah/lulzbot.git
     cd lulzbot/bin
     ./relay.js --server=<whatever> --nick=<whatever> --channel=<whatever> &
-    ./services.js --user=<whatever> --pass=<whatever>
-
-The username and password part are for twitter services. Feel free to remove that module and delete those arguments! I just haven't done anything with it is all.
-
-
+    ./services.js
 
 # commands
 
@@ -31,11 +27,19 @@ The username and password part are for twitter services. Feel free to remove tha
 * **!furryurl**: Shortens urls using furryurl.com
 * **!watch** *user*/*repo* (*branch*): Watch this github repo. The *branch* argument is optional, and defaults to master.  
 * **!unwatch** *user*/*repo* (*branch*): Un-watch a github repo.
+* **!gitlist**: Lists watched github repos.
+* **!justme**: Says if the website at a given url is down.
+* **!join**: Make lulzbot join a channel! (Does not store in a db)
+* **!part**: Make lulzbot part a channel! (Can not part channels specified with options flag)
 
 # services
 
-* **gitwatch** watches github repos in github.db
-* **twitterwatch** watches twitter for mentions of stackvm
+* **gitwatch** Watches github repos in github.db
+
+# In The Works:
+
+* **twitterwatch** Watches twitter for mentions of stackvm (Currently has broken lib)
+* **!ddg** Duck Duck Go sexiness
 
 # author(s)
 
