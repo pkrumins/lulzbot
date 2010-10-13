@@ -17,10 +17,7 @@ module.exports = function(url, cb) {
 
     var request = client.request('POST', '/api-create.php?'+query, {host: 'furryurl.com'});
     request.on('response', function (response) {
-        //console.log('STATUS: ' + response.statusCode);
-        //console.log('HEADERS: ' + JSON.stringify(response.headers));
         response.on('data', function (chunk) {
-            //regexp means "three digits, space, ??!?!, any spaces, a newline or three"
             cb(chunk.toString('utf-8'));
         });
     });
