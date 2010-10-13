@@ -29,6 +29,25 @@ function say (to, reply) {
 DNode({}).listen(12321, function (services) {
     irc.on('message', function (from, to, message) {
         var msg = { message : message, from : from, to : to };
+        if (matched = message.match(/^!join (#.+)$/)) {
+            console.log("Trying to join "+matched[1]);
+            try {
+                irc.join(matched[1]);
+            } catch(e) {
+                irc.say(to, "Error: "+e);
+            }
+        } else if (matched = message.match(/^!part (#.+)$/) ) {
+            if (matched[1] == argv.channel) {
+                console.log("Trying to part "+matched[1]);
+                try {
+                    irc.part(matched[1]);
+                } catch(e) {
+                    irc.say(to, "Error: "+e);
+                }
+            } else {
+                irc.say(to, "Nuh uh, gurl, not THIS channel!");
+            }
+        }
         services.triggers(msg, function (reply) { say(to, reply) });
     });
     
