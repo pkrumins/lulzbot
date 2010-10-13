@@ -17,7 +17,8 @@
         "yql" : ">=0.2.0",
         "github" : ">=0.0.1",
         "traverse" : ">=0.2.0",
-        "supermarket" : ">=0.0.1"
+        "supermarket" : ">=0.0.1",
+        "htmlparser" : ">=1.6.2"
     },
     "engine" : ["node >=0.1.100"],
 }
