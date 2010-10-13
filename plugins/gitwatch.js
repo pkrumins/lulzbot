@@ -67,7 +67,11 @@ function Branches () {
     
     this.getUpdated = function (cb) {
         this.getCommits(function (err, branch, meta, commits) {
-            if (err) { cb(err, branch); return }
+            if (err) {
+                //So we know which branch is causing the error
+                err.branch = branch;
+                cb(err, branch);
+            return }
             
             if (meta.lastCommit != commits[0].id) {
                 db.set(branch, Hash.merge(meta, {
