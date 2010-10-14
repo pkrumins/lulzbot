@@ -62,8 +62,8 @@ function Branches () {
     
     this.getCommits = function (cb) {
         db.forEach(function(data) {
-            var meta = data.meta;
-            var branch = data.branch;
+            var meta = data.value;
+            var branch = data.key;
             github.getBranchCommits(
                 meta.user, meta.repo, meta.name,
                 function (err, commits) { cb(err, branch, meta, commits) }
@@ -95,16 +95,17 @@ function Branches () {
 
     //List all repos
     this.list = function (channel, cb) {
-        //var repos = [];
-        console.log("roffle!");
         db.filter(function (data) {
-            console.log('filtering');
-            console.log(data.meta.channels.some(function (c) { return c === channel }));
-            return true;
+            return data.value.channels.some(function (c) { return c === channel });
           })
-          .forEach(function (data) {
-                console.log(data);
-                //cb(repo);
+          .join(function (xs) {
+            xs.sort(function (x, y) {
+                if (x.key == y.key) return 0;
+                if (x.key < y.key) return -1;
+                if (x.key > y.key) return 1;
+              }).forEach(function (x) {
+              cb(x.key)
+            });
           });
     }
     
