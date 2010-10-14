@@ -1,6 +1,5 @@
 module.exports = function (url, cb) {
     var http = require('http');
-    var querystring = require('querystring');
     var sys = require('sys');
 
     var urlbase = 'downforeveryoneorjustme.com';
