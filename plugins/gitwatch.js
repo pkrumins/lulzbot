@@ -61,7 +61,7 @@ function Branches () {
     };
     
     this.getCommits = function (cb) {
-        db.forEach(function(err, data) {
+        db.forEach(function(data) {
             var meta = data.meta;
             var branch = data.branch;
             github.getBranchCommits(
