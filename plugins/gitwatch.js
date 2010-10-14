@@ -43,7 +43,9 @@ function Branches () {
 
         var key = Hash(where).values.join('/');
 
-        db.get(key, function (err, branch, meta) {
+        db.get(key, function (err, data) {
+            var branch = data.branch;
+            var meta = data.meta;
             if (err) { if (cb) cb(err); return }
             
             var i = branch.channels.indexOf(channel);
