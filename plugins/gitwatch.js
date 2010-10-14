@@ -17,7 +17,9 @@ function Branches () {
 
         var key = Hash(where).values.join('/');
 
-        db.get(key, function (err, branch, meta) {
+        db.get(key, function (err, data) {
+            var branch = data.branch;
+            var meta = data.meta;
             var b = branch || { channels : [] };
             var updated = Hash.merge(b, {
                 channels : b.channels.indexOf(channel) >= 0
@@ -57,7 +59,9 @@ function Branches () {
     };
     
     this.getCommits = function (cb) {
-        db.forEach(function(err, branch, meta) {
+        db.forEach(function(err, data) {
+            var meta = data.meta;
+            var branch = data.branch;
             github.getBranchCommits(
                 meta.user, meta.repo, meta.name,
                 function (err, commits) { cb(err, branch, meta, commits) }
@@ -89,24 +93,17 @@ function Branches () {
 
     //List all repos
     this.list = function (channel, cb) {
-        var repos = [];
-        db.filter(
-            function (repo, meta) {
-                return meta.channels.some(function (c) { return c === channel })
-            },
-            function (err, repo, meta) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    repos.push(repo);
-                }
-            },
-            function () { // done function
-                repos.sort().forEach(function (repo) {
-                    cb(repo);
-                });
-            }
-        );
+        //var repos = [];
+        console.log("roffle!");
+        db.filter(function (data) {
+            console.log('filtering');
+            console.log(data.meta.channels.some(function (c) { return c === channel }));
+            return true;
+          })
+          .forEach(function (data) {
+                console.log(data);
+                //cb(repo);
+          });
     }
     
     this.listen = function (cb) { 
